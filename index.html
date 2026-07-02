@@ -577,6 +577,72 @@
     }
     .nine-profile-btn:hover { background: var(--orange); color: #fff; }
 
+    .more-btn {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto 0.75rem;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      border-radius: 999px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .more-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .more-btn.hidden { display: none; }
+
+    .more-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .more-list.hidden { display: none; }
+    .more-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+    .more-thumb {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface-1);
+    }
+    .more-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+    .more-info { flex: 1; min-width: 0; }
+    .more-rank { font-size: 10px; font-weight: 700; color: var(--orange); }
+    .more-name { font-size: 13px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .more-group { font-size: 10px; color: var(--text-muted); }
+    .more-profile-btn {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--orange-pale);
+      color: var(--orange);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .more-profile-btn:hover { background: var(--orange); color: #fff; }
+
     .action-btns { display: flex; flex-direction: column; gap: 0.6rem; }
     .restart-btn {
       display: block; width: 100%; max-width: 360px; margin-left: auto; margin-right: auto; padding: 13px;
@@ -730,6 +796,9 @@
     <p class="result-subtitle" id="resultSubtitle">対決を勝ち抜いたメンバーたちです</p>
     <p class="nine-hint">↗ ボタンから公式プロフィールが開きます</p>
 
+    <button class="more-btn hidden" id="moreBtn" onclick="toggleMore()">もっと見る</button>
+    <div class="more-list hidden" id="moreList"></div>
+
     <div class="action-btns">
       <button class="restart-btn" onclick="restart()">もう一度診断する</button>
       <button class="share-btn" id="shareBtn" onclick="tweetResult()">画像でXにシェアする ↗</button>
@@ -807,6 +876,7 @@ let compareMode = "quick";
 let history = [];
 let pendingAdvanceTimer = null;
 let lastRanked = [];
+let lastMoreRanked = [];
 
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -1095,9 +1165,60 @@ function showResult(decidedIdx) {
     grid.appendChild(cell);
   });
 
+  // ガチ全部比較モードは全員が総当たりで比較されているため、9位より下も信頼できる順位として「もっと見る」で出せる
+  const moreBtn = document.getElementById("moreBtn");
+  const moreList = document.getElementById("moreList");
+  moreList.innerHTML = "";
+  moreList.classList.add("hidden");
+  if (compareMode === "full" && idols.length > ranked.length) {
+    const shownIds = new Set(idx);
+    const restIdx = idols.map((_, i) => i).filter(i => !shownIds.has(i)).sort(compareIdols);
+    lastMoreRanked = restIdx.map(i => ({ ...idols[i], wins: wins[i], appearances: appearances[i] }));
+    moreBtn.textContent = `もっと見る（残り${lastMoreRanked.length}人）`;
+    moreBtn.classList.remove("hidden");
+  } else {
+    lastMoreRanked = [];
+    moreBtn.classList.add("hidden");
+  }
+
   document.getElementById("progressFill").style.width = "100%";
   document.getElementById("progressLabel").textContent = `${blockBar(1, 1)} 診断完了！`;
   document.getElementById("stageLabel").textContent = "結果発表";
+}
+
+function toggleMore() {
+  const moreBtn = document.getElementById("moreBtn");
+  const moreList = document.getElementById("moreList");
+  const isHidden = moreList.classList.contains("hidden");
+
+  if (!isHidden) {
+    moreList.classList.add("hidden");
+    moreBtn.textContent = `もっと見る（残り${lastMoreRanked.length}人）`;
+    return;
+  }
+
+  const offset = lastRanked.length;
+  moreList.innerHTML = "";
+  lastMoreRanked.forEach((idol, i) => {
+    const rank = offset + i + 1;
+    const item = document.createElement("div");
+    item.className = "more-item";
+    item.innerHTML = `
+      <div class="more-thumb"><img src="${idol.photo}" alt=""></div>
+      <div class="more-info">
+        <div class="more-rank">No.${rank}</div>
+        <div class="more-name">${idol.name}</div>
+        <div class="more-group">${idol.group}</div>
+      </div>
+      <button class="more-profile-btn" type="button" aria-label="プロフィールを見る">↗</button>
+    `;
+    item.querySelector(".more-profile-btn").addEventListener("click", () => {
+      window.open(idol.profile, "_blank", "noopener,noreferrer");
+    });
+    moreList.appendChild(item);
+  });
+  moreList.classList.remove("hidden");
+  moreBtn.textContent = "閉じる ↑";
 }
 
 function showTieResult() {
