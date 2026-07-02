@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LAPONE 好き顔診断</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
@@ -17,7 +20,7 @@
       --text-primary: #1a1a1a;
       --text-secondary: #666;
       --text-muted: #999;
-      --surface-0: #f5f5f5;
+      --surface-0: #ffffff;
       --surface-1: #f0f0f0;
       --surface-2: #ffffff;
       --border: rgba(0,0,0,0.1);
@@ -40,7 +43,7 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      font-family: "Zen Maru Gothic", -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
       background: var(--surface-0);
       color: var(--text-primary);
       min-height: 100vh;
@@ -66,45 +69,143 @@
       margin-bottom: 0.75rem;
     }
     .header h1 {
-      font-size: 24px;
-      font-weight: 700;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
       color: var(--text-primary);
       margin-bottom: 0.3rem;
     }
-    .header p { font-size: 14px; color: var(--text-secondary); }
+    .header p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
 
     /* Group filter */
     .group-filter {
       display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 1.5rem;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
     }
     .filter-btn {
-      padding: 6px 16px;
-      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      padding: 12px 16px;
+      border-radius: 12px;
       border: 1px solid var(--border-strong);
-      background: transparent;
-      color: var(--text-secondary);
-      font-size: 12px;
+      background: var(--surface-2);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
       font-family: inherit;
       cursor: pointer;
       transition: all 0.15s;
     }
-    .filter-btn:hover { border-color: var(--orange); color: var(--orange); }
-    .filter-btn.active {
-      background: var(--orange);
+    .filter-btn::before {
+      content: "";
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
       color: white;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: var(--orange); }
+    .filter-btn.active {
+      border-color: var(--orange);
+      background: var(--orange-pale);
+      color: var(--orange);
+    }
+    .filter-btn.active::before {
+      content: "✓";
+      background: var(--orange);
       border-color: var(--orange);
     }
 
     .select-screen.hidden { display: none; }
+
+    .intro-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .how-to {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.75rem;
+    }
+    .how-to-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+    }
+    .how-to-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .how-to-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .how-to-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
     .select-hint {
       text-align: center;
       font-size: 13px;
       color: var(--text-secondary);
       margin-bottom: 1rem;
+    }
+
+    .mode-select {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .mode-btn {
+      flex: 1;
+      text-align: center;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-2);
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .mode-btn:hover { border-color: var(--orange); }
+    .mode-btn.active {
+      border-color: var(--orange);
+      background: var(--orange-pale);
+    }
+    .mode-btn-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .mode-btn.active .mode-btn-title { color: var(--orange); }
+    .mode-btn-desc { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .select-meta {
+      text-align: center;
+      font-size: 12px;
+      color: var(--orange);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      min-height: 16px;
     }
     .start-btn {
       display: block;
@@ -168,10 +269,10 @@
       background: var(--surface-2);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 1.25rem 1rem;
-      text-align: center;
+      padding: 0;
+      overflow: hidden;
       cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, opacity 0.25s, filter 0.25s;
       user-select: none;
     }
     .idol-card:hover {
@@ -182,22 +283,21 @@
     .idol-card:active { transform: scale(0.97); }
     .idol-card.chosen {
       border-color: var(--orange);
-      background: var(--orange-pale);
-      animation: chosen-flash 0.35s ease;
+      box-shadow: 0 0 0 3px var(--orange), 0 10px 26px rgba(255,151,0,0.4);
+      animation: chosen-flash 0.4s ease;
     }
-    .idol-card.unchosen { opacity: 0.45; filter: grayscale(40%); }
+    .idol-card.unchosen { opacity: 0.3; filter: grayscale(60%); transform: scale(0.97); }
 
     @keyframes chosen-flash {
       0% { transform: scale(1); }
-      30% { transform: scale(1.04); }
+      35% { transform: scale(1.06); }
       100% { transform: scale(1); }
     }
 
     .idol-avatar {
       width: 100%;
       aspect-ratio: 3 / 4;
-      border-radius: 12px;
-      margin: 0 auto 0.75rem;
+      margin: 0;
       background: var(--surface-1);
       position: relative;
       overflow: hidden;
@@ -206,27 +306,28 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 12px;
+      object-position: center 20%;
     }
-    .idol-group-tag {
+    .idol-caption {
       position: absolute;
-      bottom: -2px;
-      right: -2px;
-      font-size: 9px;
-      background: var(--orange);
-      color: white;
-      border-radius: 999px;
-      padding: 2px 5px;
-      font-weight: 600;
-      white-space: nowrap;
+      left: 0; right: 0; bottom: 0;
+      padding: 18px 10px 8px;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+      text-align: left;
     }
     .idol-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 2px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      margin-bottom: 1px;
     }
-    .idol-name-en { font-size: 11px; color: var(--text-muted); }
+    .idol-group-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.85);
+    }
 
     .choose-row {
       display: grid;
@@ -236,7 +337,24 @@
     }
     .choose-arrow-btn {
       padding: 14px 8px;
-      background: linear-gradient(135deg, var(--orange), #ff7a30);
+      background: var(--surface-2);
+      color: var(--orange);
+      border: 2px solid var(--orange);
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s, background 0.15s;
+    }
+    .choose-arrow-btn:hover { background: var(--orange-pale); }
+    .choose-arrow-btn:active { transform: scale(0.97); }
+
+    .both-like-btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: var(--orange);
       color: white;
       border: none;
       border-radius: 999px;
@@ -244,27 +362,11 @@
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-    }
-    .choose-arrow-btn:hover { opacity: 0.9; }
-    .choose-arrow-btn:active { transform: scale(0.97); }
-
-    .both-like-btn {
-      display: block;
-      width: 100%;
-      padding: 13px;
-      background: var(--orange-pale);
-      color: var(--orange);
-      border: 1px solid var(--orange);
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
       margin-bottom: 0.5rem;
-      transition: background 0.15s, color 0.15s;
+      transition: opacity 0.15s;
+      box-shadow: 0 4px 14px rgba(255,151,0,0.3);
     }
-    .both-like-btn:hover { background: var(--orange); color: white; }
+    .both-like-btn:hover { opacity: 0.88; }
 
     .skip-btn {
       display: block;
@@ -272,15 +374,15 @@
       padding: 11px;
       margin-bottom: 0.5rem;
       background: transparent;
-      border: 1px dashed var(--border-strong);
+      border: none;
       color: var(--text-secondary);
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 13px;
       font-family: inherit;
       cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
+      transition: color 0.15s;
     }
-    .skip-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .skip-btn:hover { color: var(--orange); }
 
     .undo-btn {
       display: block;
@@ -299,17 +401,19 @@
     .undo-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .vs-badge {
-      width: 42px;
-      height: 42px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       background: var(--orange);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(255,151,0,0.4);
+      border: 3px solid var(--surface-0);
     }
 
     /* Heart burst animation */
@@ -332,9 +436,23 @@
     .result-screen.active { display: block; }
     .battle-screen.hidden { display: none; }
 
+    .header.hidden { display: none; }
+
     .result-header { text-align: center; margin-bottom: 1.5rem; }
-    .result-title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 0.4rem; }
-    .result-subtitle { font-size: 14px; color: var(--text-secondary); }
+    .result-badge {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 8px 24px;
+      border-radius: 999px;
+      margin-bottom: 0.9rem;
+      box-shadow: 0 4px 16px rgba(255,151,0,0.35);
+    }
+    .result-title { font-size: 22px; font-weight: 700; color: var(--orange); letter-spacing: 0.02em; margin-bottom: 0.4rem; }
+    .result-subtitle { text-align: center; font-size: 14px; color: var(--text-secondary); margin-bottom: 0.5rem; }
 
     .tie-emoji {
       text-align: center;
@@ -348,49 +466,104 @@
       75% { transform: scale(1.08) rotate(4deg); }
     }
 
+    /* Result frame: 16:9 に収まる結果ビジュアル */
+    .result-frame {
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 16 / 9;
+      margin: 0 auto 0.75rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px 12px 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .result-frame-header { text-align: center; flex-shrink: 0; margin-bottom: 6px; }
+    .result-frame-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 0.08em;
+    }
+    .result-frame-title { font-size: 15px; font-weight: 800; color: var(--text-primary); }
+
     .nine-grid {
+      flex: 1;
+      min-height: 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.6rem;
-      margin-bottom: 1.5rem;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 5px;
     }
     .nine-cell {
-      display: block;
-      background: var(--surface-2);
-      border-radius: 12px;
-      padding: 0.85rem 0.5rem;
-      text-align: center;
+      position: relative;
+      min-height: 0;
+      border-radius: 8px;
+      overflow: hidden;
       border: 1px solid var(--border);
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.15s, transform 0.15s;
+      background: var(--surface-1);
     }
-    .nine-cell:hover { border-color: var(--orange); transform: translateY(-2px); }
-    .nine-cell.rank-1 { border-color: var(--orange); background: var(--orange-pale); }
+    .nine-cell.rank-1 {
+      grid-column: 2;
+      grid-row: 2;
+      border: 2px solid var(--orange);
+      box-shadow: 0 4px 16px rgba(255,151,0,0.4);
+      z-index: 1;
+    }
     .nine-hint {
       text-align: center;
       font-size: 12px;
       color: var(--text-muted);
       margin-bottom: 0.75rem;
     }
-    .nine-rank { font-size: 10px; color: var(--orange); font-weight: 600; margin-bottom: 3px; }
-    .nine-emoji {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      border-radius: 8px;
-      background: var(--surface-1);
-      margin: 0 auto 5px;
-      overflow: hidden;
-      position: relative;
-    }
+    .nine-emoji { width: 100%; height: 100%; }
     .nine-emoji img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 8px;
+      object-position: center 20%;
     }
-    .nine-name { font-size: 12px; font-weight: 600; color: var(--text-primary); }
-    .nine-group { font-size: 10px; color: var(--text-muted); }
+    .nine-rank-badge {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      font-size: 7px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(0,0,0,0.55);
+      padding: 1px 4px;
+      border-radius: 999px;
+    }
+    .nine-caption {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 8px 5px 3px;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+    }
+    .nine-name { font-size: 9px; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); line-height: 1.2; }
+    .nine-group { font-size: 7px; color: rgba(255,255,255,0.85); }
+    .nine-profile-btn {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      color: var(--orange);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nine-profile-btn:hover { background: var(--orange); color: #fff; }
 
     .action-btns { display: flex; flex-direction: column; gap: 0.6rem; }
     .restart-btn {
@@ -411,13 +584,11 @@
 
     @media (max-width: 480px) {
       .app { padding: 1.5rem 0.7rem 3rem; }
-      .header h1 { font-size: 21px; }
+      .header h1 { font-size: 24px; }
 
       .vs-section { gap: 0.5rem; }
-      .idol-card { padding: 0.85rem 0.6rem; }
-      .idol-name { font-size: 13px; }
-      .idol-name-en { font-size: 10px; }
-      .vs-badge { width: 34px; height: 34px; font-size: 11px; }
+      .idol-name { font-size: 14px; }
+      .vs-badge { width: 42px; height: 42px; font-size: 12px; }
 
       .choose-row { gap: 0.5rem; }
       .choose-arrow-btn { padding: 12px 6px; font-size: 13px; }
@@ -425,8 +596,8 @@
       .filter-btn { padding: 10px 16px; font-size: 13px; }
       .start-btn, .restart-btn { padding: 15px; }
 
-      .nine-grid { gap: 0.45rem; }
-      .nine-cell { padding: 0.6rem 0.35rem; }
+      .result-frame { padding: 8px 8px 6px; }
+      .nine-grid { gap: 3px; }
     }
 
     @media (max-width: 360px) {
@@ -440,21 +611,62 @@
 <body>
 <div class="app">
 
-  <div class="header">
+  <div class="header" id="pageHeader">
     <div class="header-badge">LAPONE × 好き顔診断</div>
     <h1>あなたの好き顔9選</h1>
-    <p>どちらが好みか選んで、ランキングを決めよう</p>
+    <p>直感で選ぶだけ！<br>最後にあなただけのランキングが完成</p>
   </div>
 
   <div class="select-screen" id="selectScreen">
-    <p class="select-hint">2グループ以上を選んで診断をはじめよう</p>
+    <p class="intro-text">
+      JO1・INI・DXTEEN・KO1KEYZ——好きなグループを選ぶと、1対1の対決を勝ち抜いたメンバーだけが並ぶ「あなたの好き顔ランキング」が完成します。難しく考えず、直感でどんどん選んでいくのがおすすめです。
+    </p>
+
+    <div class="how-to">
+      <div class="how-to-step">
+        <span class="how-to-num">1</span>
+        <div>
+          <div class="how-to-title">グループを選ぶ</div>
+          <div class="how-to-desc">気になるグループを2つ以上チェック</div>
+        </div>
+      </div>
+      <div class="how-to-step">
+        <span class="how-to-num">2</span>
+        <div>
+          <div class="how-to-title">直感で選ぶ</div>
+          <div class="how-to-desc">2人のうち好きな方をタップするだけ</div>
+        </div>
+      </div>
+      <div class="how-to-step">
+        <span class="how-to-num">3</span>
+        <div>
+          <div class="how-to-title">結果が完成</div>
+          <div class="how-to-desc">あなただけの好き顔ランキングが誕生</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="select-hint">✓ 2グループ以上選ぶと診断できます</p>
     <div class="group-filter" id="groupFilter">
       <button class="filter-btn" data-group="JO1">JO1</button>
       <button class="filter-btn" data-group="INI">INI</button>
       <button class="filter-btn" data-group="DXTEEN">DXTEEN</button>
       <button class="filter-btn" data-group="KO1KEYZ">KO1KEYZ</button>
     </div>
-    <button class="start-btn" id="startBtn" disabled>診断をはじめる</button>
+
+    <div class="mode-select" id="modeSelect">
+      <button class="mode-btn active" type="button" data-mode="quick">
+        <div class="mode-btn-title">簡単モード</div>
+        <div class="mode-btn-desc">サクッと診断できる目安の対戦数</div>
+      </button>
+      <button class="mode-btn" type="button" data-mode="full">
+        <div class="mode-btn-title">ガチ全部比較</div>
+        <div class="mode-btn-desc">全員を1対1で総当たり比較</div>
+      </button>
+    </div>
+
+    <p class="select-meta" id="selectMeta"></p>
+    <button class="start-btn" id="startBtn" disabled>診断スタート</button>
   </div>
 
   <div class="battle-screen hidden" id="battleScreen">
@@ -462,16 +674,17 @@
       <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
     </div>
     <div class="progress-label" id="progressLabel">対決 1 / ?</div>
-    <div class="stage-label" id="stageLabel">▶ 対決スタート</div>
+    <div class="stage-label" id="stageLabel">対決スタート</div>
 
     <div class="vs-section">
       <div class="idol-card" id="cardA" onclick="choose(0, event)">
         <div class="idol-avatar" id="avatarA">
           <img id="photoA" alt="">
-          <span class="idol-group-tag" id="groupTagA"></span>
+          <div class="idol-caption">
+            <div class="idol-name" id="nameA"></div>
+            <div class="idol-group-tag" id="groupTagA"></div>
+          </div>
         </div>
-        <div class="idol-name" id="nameA"></div>
-        <div class="idol-name-en" id="nameEnA"></div>
       </div>
 
       <div class="vs-badge">VS</div>
@@ -479,32 +692,35 @@
       <div class="idol-card" id="cardB" onclick="choose(1, event)">
         <div class="idol-avatar" id="avatarB">
           <img id="photoB" alt="">
-          <span class="idol-group-tag" id="groupTagB"></span>
+          <div class="idol-caption">
+            <div class="idol-name" id="nameB"></div>
+            <div class="idol-group-tag" id="groupTagB"></div>
+          </div>
         </div>
-        <div class="idol-name" id="nameB"></div>
-        <div class="idol-name-en" id="nameEnB"></div>
       </div>
     </div>
 
     <div class="choose-row">
-      <button class="choose-arrow-btn" onclick="choose(0, event)">← 好き</button>
-      <button class="choose-arrow-btn" onclick="choose(1, event)">好き →</button>
+      <button class="choose-arrow-btn" onclick="choose(0, event)">← 左が好き</button>
+      <button class="choose-arrow-btn" onclick="choose(1, event)">右が好き →</button>
     </div>
 
-    <button class="both-like-btn" onclick="skip()">😭 どっちも好きで選べない</button>
-    <button class="skip-btn" onclick="skip()">わからない / スキップ</button>
+    <button class="both-like-btn" onclick="skip()">どっちも好き</button>
+    <button class="skip-btn" onclick="skip()">わからない</button>
     <button class="undo-btn" id="undoBtn" onclick="undo()" disabled>↩ ひとつ戻る</button>
   </div>
 
   <div class="result-screen" id="resultScreen">
-    <div class="result-header">
-      <div class="header-badge">診断結果</div>
-      <div class="result-title" id="resultTitle">あなたの好き顔9選 ✦</div>
-      <div class="result-subtitle" id="resultSubtitle">対決を勝ち抜いたメンバーたちです</div>
+    <div class="result-frame" id="resultFrame">
+      <div class="result-frame-header">
+        <div class="result-frame-badge">診断結果</div>
+        <div class="result-frame-title" id="resultTitle">あなたの好き顔9選 ✦</div>
+      </div>
+      <div class="nine-grid" id="nineGrid"></div>
     </div>
 
-    <p class="nine-hint">写真をタップすると公式プロフィールページが開きます</p>
-    <div class="nine-grid" id="nineGrid"></div>
+    <p class="result-subtitle" id="resultSubtitle">対決を勝ち抜いたメンバーたちです</p>
+    <p class="nine-hint">↗ ボタンから公式プロフィールが開きます</p>
 
     <div class="action-btns">
       <button class="restart-btn" onclick="restart()">もう一度診断する</button>
@@ -515,12 +731,12 @@
 
   <div class="result-screen tie-screen" id="tieScreen">
     <div class="result-header">
-      <div class="header-badge">診断結果</div>
+      <div class="result-badge">診断結果</div>
       <div class="result-title">全員尊すぎて決められなかった…！</div>
       <div class="result-subtitle">あなたは全方位担当のガチ恋勢でした</div>
     </div>
 
-    <div class="tie-emoji">😭💕😭</div>
+    <div class="tie-emoji">♡ ♡ ♡</div>
 
     <div class="action-btns">
       <button class="restart-btn" onclick="restart()">もう一度挑戦する</button>
@@ -579,6 +795,7 @@ let comparisons = [];
 let currentIdx = 0;
 let totalComparisons = 0;
 let selectedGroups = new Set();
+let compareMode = "quick";
 let history = [];
 let pendingAdvanceTimer = null;
 let lastRanked = [];
@@ -591,7 +808,7 @@ function shuffle(arr) {
   return arr;
 }
 
-function buildComparisons(list) {
+function buildComparisons(list, mode) {
   const pairs = [];
   for (let i = 0; i < list.length; i++) {
     for (let j = i + 1; j < list.length; j++) {
@@ -599,6 +816,7 @@ function buildComparisons(list) {
     }
   }
   shuffle(pairs);
+  if (mode === "full") return pairs;
   const needed = Math.min(pairs.length, Math.ceil(list.length * 2.5));
   return pairs.slice(0, needed);
 }
@@ -623,7 +841,7 @@ function initGame() {
   wins = {};
   appearances = {};
   idols.forEach((_, i) => { wins[i] = 0; appearances[i] = 0; });
-  comparisons = buildComparisons(idols);
+  comparisons = buildComparisons(idols, compareMode);
   currentIdx = 0;
   totalComparisons = comparisons.length;
   history = [];
@@ -651,17 +869,21 @@ function showNext() {
   const pct = Math.round((currentIdx / totalComparisons) * 100);
   document.getElementById("progressFill").style.width = pct + "%";
   document.getElementById("progressLabel").textContent =
-    `対決 ${currentIdx + 1} / ${totalComparisons}`;
+    `${blockBar(currentIdx, totalComparisons)} ${currentIdx + 1} / ${totalComparisons}`;
 
-  const stages = ["▶ 対決スタート", "🔥 熱戦中！", "💫 佳境に入ってきた！", "✨ もうすぐ結果！"];
+  const stages = ["対決スタート", "熱戦中！", "佳境に入ってきた！", "もうすぐ結果！"];
   document.getElementById("stageLabel").textContent = stages[Math.min(Math.floor(pct / 25), 3)];
+}
+
+function blockBar(current, total, size = 10) {
+  const filled = total === 0 ? 0 : Math.round((current / total) * size);
+  return "■".repeat(Math.min(filled, size)) + "□".repeat(Math.max(size - filled, 0));
 }
 
 function setCard(side, idol) {
   document.getElementById("photo" + side).src = idol.photo;
   document.getElementById("groupTag" + side).textContent = idol.group;
   document.getElementById("name" + side).textContent = idol.name;
-  document.getElementById("nameEn" + side).textContent = idol.nameEn;
 }
 
 function choose(side, event) {
@@ -690,7 +912,7 @@ function skip() {
 }
 
 function advance() {
-  if (currentIdx < comparisons.length && isTop9Locked()) {
+  if (compareMode !== "full" && currentIdx < comparisons.length && isTop9Locked()) {
     showResult();
     return;
   }
@@ -766,6 +988,7 @@ function undo() {
   currentIdx = last.idx;
   updateUndoButtons();
 
+  document.getElementById("pageHeader").classList.remove("hidden");
   document.getElementById("resultScreen").classList.remove("active");
   document.getElementById("tieScreen").classList.remove("active");
   document.getElementById("battleScreen").classList.remove("hidden");
@@ -829,6 +1052,7 @@ function showResult(decidedIdx) {
     return;
   }
 
+  document.getElementById("pageHeader").classList.add("hidden");
   document.getElementById("battleScreen").classList.add("hidden");
   document.getElementById("resultScreen").classList.add("active");
 
@@ -842,38 +1066,43 @@ function showResult(decidedIdx) {
     ? "対決を勝ち抜いたメンバーたちです"
     : `同率で決着がつかなかったため、決まった${count}名だけの結果です`;
 
-  const medals = ["🥇", "🥈", "🥉"];
   const grid = document.getElementById("nineGrid");
   grid.innerHTML = "";
-  ranked.forEach((idol, idx) => {
-    const cell = document.createElement("a");
-    cell.className = "nine-cell" + (idx === 0 ? " rank-1" : "");
-    cell.href = idol.profile;
-    cell.target = "_blank";
-    cell.rel = "noopener noreferrer";
+  ranked.forEach((idol, i) => {
+    const rank = i + 1;
+    const cell = document.createElement("div");
+    cell.className = "nine-cell" + (i === 0 ? " rank-1" : "");
     cell.innerHTML = `
-      <div class="nine-rank">${medals[idx] || "No." + (idx + 1)}</div>
       <div class="nine-emoji"><img src="${idol.photo}" alt=""></div>
-      <div class="nine-name">${idol.name}</div>
-      <div class="nine-group">${idol.group}</div>
+      <div class="nine-rank-badge">No.${rank}</div>
+      <div class="nine-caption">
+        <div class="nine-name">${idol.name}</div>
+        <div class="nine-group">${idol.group}</div>
+      </div>
+      <button class="nine-profile-btn" type="button" aria-label="プロフィールを見る">↗</button>
     `;
+    cell.querySelector(".nine-profile-btn").addEventListener("click", () => {
+      window.open(idol.profile, "_blank", "noopener,noreferrer");
+    });
     grid.appendChild(cell);
   });
 
   document.getElementById("progressFill").style.width = "100%";
-  document.getElementById("progressLabel").textContent = "診断完了！";
-  document.getElementById("stageLabel").textContent = "🎉 結果発表";
+  document.getElementById("progressLabel").textContent = `${blockBar(1, 1)} 診断完了！`;
+  document.getElementById("stageLabel").textContent = "結果発表";
 }
 
 function showTieResult() {
+  document.getElementById("pageHeader").classList.add("hidden");
   document.getElementById("battleScreen").classList.add("hidden");
   document.getElementById("tieScreen").classList.add("active");
   document.getElementById("progressFill").style.width = "100%";
-  document.getElementById("progressLabel").textContent = "診断完了！";
-  document.getElementById("stageLabel").textContent = "🎉 結果発表";
+  document.getElementById("progressLabel").textContent = `${blockBar(1, 1)} 診断完了！`;
+  document.getElementById("stageLabel").textContent = "結果発表";
 }
 
 function restart() {
+  document.getElementById("pageHeader").classList.remove("hidden");
   document.getElementById("resultScreen").classList.remove("active");
   document.getElementById("tieScreen").classList.remove("active");
   document.getElementById("battleScreen").classList.add("hidden");
@@ -904,7 +1133,8 @@ function drawCover(ctx, img, dx, dy, dw, dh) {
     sw = img.width;
     sh = sw / destRatio;
     sx = 0;
-    sy = (img.height - sh) / 2;
+    // 顔は写真の上部3分の1あたりにあることが多いため、中央ではなく上寄りをクロップする
+    sy = (img.height - sh) * 0.15;
   }
   ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
 }
@@ -956,7 +1186,7 @@ async function tweetResult() {
     return;
   }
 
-  const text = "私のLAPONE好き顔9選！ #LAPONE好き顔診断";
+  const text = `私の好き顔No.1は${lastRanked[0].name}でした！\n#LAPONE好き顔診断`;
   const file = new File([blob], "lapone-favorite9.png", { type: "image/png" });
 
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -993,6 +1223,19 @@ async function tweetResult() {
 }
 
 // Group selection (multi-select, requires 2+ groups to start)
+function updateSelectMeta() {
+  const meta = document.getElementById("selectMeta");
+  if (selectedGroups.size < 2) {
+    meta.textContent = "";
+    return;
+  }
+  const n = ALL_IDOLS.filter(x => selectedGroups.has(x.group)).length;
+  const totalPairs = n * (n - 1) / 2;
+  const total = compareMode === "full" ? totalPairs : Math.min(totalPairs, Math.ceil(n * 2.5));
+  const minutes = Math.max(1, Math.round(total * 5 / 60));
+  meta.textContent = `所要時間：約${minutes}分 ・ 全${total}対戦`;
+}
+
 document.querySelectorAll(".filter-btn").forEach(btn => {
   btn.addEventListener("click", function () {
     const g = this.dataset.group;
@@ -1004,6 +1247,17 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
       this.classList.add("active");
     }
     document.getElementById("startBtn").disabled = selectedGroups.size < 2;
+    updateSelectMeta();
+  });
+});
+
+// Mode selection (quick / full round-robin)
+document.querySelectorAll(".mode-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    compareMode = this.dataset.mode;
+    updateSelectMeta();
   });
 });
 
