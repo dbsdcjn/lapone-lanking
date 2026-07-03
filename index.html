@@ -1311,18 +1311,20 @@ async function tweetResult() {
     blob = await buildShareImage(lastRanked);
   } catch (err) {
     if (twitterWindow) twitterWindow.close();
-    alert("画像の生成に失敗しました。file:// で直接開いている場合、ローカルサーバー経由で開くと解決することがあります。");
+    alert("画像の作成に失敗しました。お手数ですが、時間をおいてもう一度お試しください。");
     shareBtn.disabled = false;
     shareBtn.textContent = originalLabel;
     return;
   }
 
-  const text = `私の好き顔No.1は${lastRanked[0].name}でした！\n#LAPONE好き顔診断`;
+  // navigator.share は files 指定時に url フィールドが共有先アプリ側で無視されることがあるため、
+  // リンクは text に直接埋め込んで確実に一緒に共有されるようにする
+  const text = `私の好き顔No.1は${lastRanked[0].name}でした！\n${SHARE_URL}\n#LAPONE好き顔診断`;
   const file = new File([blob], "lapone-favorite9.png", { type: "image/png" });
 
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], text, url: SHARE_URL || undefined });
+      await navigator.share({ files: [file], text });
       shareBtn.disabled = false;
       shareBtn.textContent = originalLabel;
       return;
@@ -1345,7 +1347,6 @@ async function tweetResult() {
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 
   const tweetParams = new URLSearchParams({ text });
-  if (SHARE_URL) tweetParams.set("url", SHARE_URL);
   const tweetUrl = `https://twitter.com/intent/tweet?${tweetParams.toString()}`;
   if (twitterWindow) {
     twitterWindow.location.href = tweetUrl;
