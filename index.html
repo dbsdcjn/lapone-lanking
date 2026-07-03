@@ -1441,9 +1441,24 @@ function updateSelectMeta() {
   }
   const n = ALL_IDOLS.filter(x => selectedGroups.has(x.group)).length;
   const totalPairs = n * (n - 1) / 2;
-  const total = compareMode === "full" ? totalPairs : Math.min(totalPairs, Math.ceil(n * 2.5));
-  const minutes = Math.max(1, Math.round(total * 5 / 60));
-  meta.textContent = `所要時間：約${minutes}分 ・ 全${total}対戦`;
+  const secPerAnswer = 3;
+
+  let minTotal, maxTotal;
+  if (compareMode === "full") {
+    // 実際は20位が確定した時点で早期終了するため、9位確定(簡単モード)と同じ密度で目安件数を見積もる
+    minTotal = Math.min(totalPairs, Math.ceil(n * 2.5 * 20 / 9));
+    maxTotal = totalPairs;
+  } else {
+    maxTotal = Math.min(totalPairs, Math.ceil(n * 2.5));
+    minTotal = Math.max(1, Math.ceil(maxTotal * 0.6));
+  }
+
+  const minMinutes = Math.max(1, Math.round(minTotal * secPerAnswer / 60));
+  const maxMinutes = Math.max(minMinutes, Math.round(maxTotal * secPerAnswer / 60));
+
+  const time = minMinutes === maxMinutes ? `約${minMinutes}分` : `約${minMinutes}〜${maxMinutes}分`;
+  const battle = minTotal === maxTotal ? `全${maxTotal}対戦` : `${minTotal}〜${maxTotal}対戦`;
+  meta.textContent = `所要時間：${time} ・ ${battle}`;
 }
 
 document.querySelectorAll(".filter-btn").forEach(btn => {
