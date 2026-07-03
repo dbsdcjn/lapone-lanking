@@ -946,16 +946,10 @@ function showNext() {
 
   const pct = Math.round((currentIdx / totalComparisons) * 100);
   document.getElementById("progressFill").style.width = pct + "%";
-  document.getElementById("progressLabel").textContent =
-    `${blockBar(currentIdx, totalComparisons)} ${currentIdx + 1} / ${totalComparisons}`;
+  document.getElementById("progressLabel").textContent = `対決 ${currentIdx + 1} / ${totalComparisons}`;
 
   const stages = ["対決スタート", "熱戦中！", "佳境に入ってきた！", "もうすぐ結果！"];
   document.getElementById("stageLabel").textContent = stages[Math.min(Math.floor(pct / 25), 3)];
-}
-
-function blockBar(current, total, size = 10) {
-  const filled = total === 0 ? 0 : Math.round((current / total) * size);
-  return "■".repeat(Math.min(filled, size)) + "□".repeat(Math.max(size - filled, 0));
 }
 
 function setCard(side, idol) {
@@ -1182,7 +1176,7 @@ function showResult(decidedIdx) {
   }
 
   document.getElementById("progressFill").style.width = "100%";
-  document.getElementById("progressLabel").textContent = `${blockBar(1, 1)} 診断完了！`;
+  document.getElementById("progressLabel").textContent = "診断完了！";
   document.getElementById("stageLabel").textContent = "結果発表";
 }
 
@@ -1226,7 +1220,7 @@ function showTieResult() {
   document.getElementById("battleScreen").classList.add("hidden");
   document.getElementById("tieScreen").classList.add("active");
   document.getElementById("progressFill").style.width = "100%";
-  document.getElementById("progressLabel").textContent = `${blockBar(1, 1)} 診断完了！`;
+  document.getElementById("progressLabel").textContent = "診断完了！";
   document.getElementById("stageLabel").textContent = "結果発表";
 }
 
