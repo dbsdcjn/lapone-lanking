@@ -659,6 +659,14 @@
       cursor: pointer; transition: background 0.15s, color 0.15s;
     }
     .share-btn:hover { background: var(--orange); color: white; }
+    .save-btn {
+      display: block; width: 100%; max-width: 360px; margin-left: auto; margin-right: auto; padding: 12px;
+      background: transparent; color: var(--text-secondary);
+      border: 1px solid var(--border-strong); border-radius: 999px;
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    }
+    .save-btn:hover { border-color: var(--orange); color: var(--orange); }
 
     @media (max-width: 480px) {
       .app { padding: 1.5rem 0.7rem 3rem; }
@@ -802,6 +810,7 @@
     <div class="action-btns">
       <button class="restart-btn" onclick="restart()">もう一度診断する</button>
       <button class="share-btn" id="shareBtn" onclick="tweetResult()">画像でXにシェアする ↗</button>
+      <button class="save-btn" id="saveBtn" onclick="saveImage()">画像だけ保存する</button>
       <button class="undo-btn" id="undoBtnResult" onclick="undo()" disabled>↩ 一つ前の対決に戻る</button>
     </div>
   </div>
@@ -868,6 +877,7 @@ const ALL_IDOLS = [
 let idols = [];
 let wins = {};
 let appearances = {};
+let beats = {}; // 直接対決の勝敗記録（"勝者-敗者" をキーにする）
 let comparisons = [];
 let currentIdx = 0;
 let totalComparisons = 0;
@@ -888,16 +898,37 @@ function shuffle(arr) {
 }
 
 function buildComparisons(list, mode) {
-  const pairs = [];
-  for (let i = 0; i < list.length; i++) {
-    for (let j = i + 1; j < list.length; j++) {
-      pairs.push([i, j]);
+  if (mode === "full") {
+    const pairs = [];
+    for (let i = 0; i < list.length; i++) {
+      for (let j = i + 1; j < list.length; j++) {
+        pairs.push([i, j]);
+      }
     }
+    return shuffle(pairs);
   }
-  shuffle(pairs);
-  if (mode === "full") return pairs;
-  const needed = Math.min(pairs.length, Math.ceil(list.length * 2.5));
-  return pairs.slice(0, needed);
+  // お手軽モード：円順表方式で全員の出場回数を揃える（1人あたり約5戦）
+  // 出場回数が不均等だと「1戦1勝=勝率100%」が過大評価されて順位が歪むため
+  return buildBalancedComparisons(list.length, 5);
+}
+
+// 総当たり日程の円順表方式。roundCountラウンド分だけ切り出すことで、
+// 全員がほぼ同じ回数だけ出場する対戦リストを作る
+function buildBalancedComparisons(n, roundCount) {
+  const ids = shuffle([...Array(n).keys()]);
+  if (n % 2 === 1) ids.push(-1); // 奇数人数なら休み枠を追加
+  const m = ids.length;
+  const result = [];
+  for (let r = 0; r < Math.min(roundCount, m - 1); r++) {
+    const pairs = [];
+    for (let i = 0; i < m / 2; i++) {
+      const a = ids[i], b = ids[m - 1 - i];
+      if (a !== -1 && b !== -1) pairs.push(a < b ? [a, b] : [b, a]);
+    }
+    result.push(...shuffle(pairs));
+    ids.splice(1, 0, ids.pop()); // 先頭を固定して回転
+  }
+  return result;
 }
 
 function rate(i) {
@@ -905,10 +936,13 @@ function rate(i) {
   return a === 0 ? 0 : (wins[i] || 0) / a;
 }
 
-// 勝率優先、同率なら勝ち数、それも同じなら対戦数が多い方を上位にする
+// 勝率優先、同率なら直接対決の勝敗、次に勝ち数、それも同じなら対戦数が多い方を上位にする
+// ※直接対決を勝率より優先すると比較関数が非推移的になりソートが壊れるため、同率時のみ参照する
 function compareIdols(a, b) {
   const byRate = rate(b) - rate(a);
   if (byRate !== 0) return byRate;
+  if (beats[`${a}-${b}`]) return -1;
+  if (beats[`${b}-${a}`]) return 1;
   const byWins = wins[b] - wins[a];
   if (byWins !== 0) return byWins;
   return appearances[b] - appearances[a];
@@ -919,6 +953,7 @@ function initGame() {
 
   wins = {};
   appearances = {};
+  beats = {};
   idols.forEach((_, i) => { wins[i] = 0; appearances[i] = 0; });
   comparisons = buildComparisons(idols, compareMode);
   currentIdx = 0;
@@ -961,12 +996,14 @@ function setCard(side, idol) {
 }
 
 function choose(side, event) {
+  if (pendingAdvanceTimer) return; // 演出中の連打で次のペアに誤投票されるのを防ぐ
   const [a, b] = comparisons[currentIdx];
   const winner = side === 0 ? a : b;
   const loser = side === 0 ? b : a;
   wins[winner]++;
   appearances[winner]++;
   appearances[loser]++;
+  beats[`${winner}-${loser}`] = true;
   history.push({ idx: currentIdx, winner, loser });
   currentIdx++;
   updateUndoButtons();
@@ -979,6 +1016,7 @@ function choose(side, event) {
 }
 
 function skip() {
+  if (pendingAdvanceTimer) return; // 演出中の連打防止
   history.push({ idx: currentIdx, winner: null });
   currentIdx++;
   updateUndoButtons();
@@ -987,6 +1025,7 @@ function skip() {
 
 // 「わからない」は対象の2人を選考対象から除外し、以後の対決にも出さない
 function excludeAndSkip() {
+  if (pendingAdvanceTimer) return; // 演出中の連打防止
   const [a, b] = comparisons[currentIdx];
   excluded.add(a);
   excluded.add(b);
@@ -1052,19 +1091,27 @@ function ensureTopConfirmed(topCount) {
   if (ranked.length < topCount) return false;
   const top = ranked.slice(0, topCount);
 
-  const askedKeys = new Set(comparisons.slice(0, currentIdx).map(([a, b]) => a < b ? `${a}-${b}` : `${b}-${a}`));
+  const pairKey = ([a, b]) => a < b ? `${a}-${b}` : `${b}-${a}`;
+  const askedKeys = new Set(comparisons.slice(0, currentIdx).map(pairKey));
+
+  // 未実施の上位ペアを洗い出す
+  const missingKeys = new Set();
   const missingPairs = [];
   for (let x = 0; x < top.length; x++) {
     for (let y = x + 1; y < top.length; y++) {
-      const a = top[x], b = top[y];
-      const key = a < b ? `${a}-${b}` : `${b}-${a}`;
-      if (!askedKeys.has(key)) missingPairs.push([a, b]);
+      const key = pairKey([top[x], top[y]]);
+      if (!askedKeys.has(key)) {
+        missingKeys.add(key);
+        missingPairs.push([top[x], top[y]]);
+      }
     }
   }
   if (missingPairs.length === 0) return false;
 
+  // 早期終了時にキュー後方へ残っている同じペアは取り除き、二重出題を防いだ上で先頭に割り込ませる
+  const pending = comparisons.slice(currentIdx).filter(p => !missingKeys.has(pairKey(p)));
   shuffle(missingPairs);
-  comparisons = comparisons.slice(0, currentIdx).concat(missingPairs, comparisons.slice(currentIdx));
+  comparisons = comparisons.slice(0, currentIdx).concat(missingPairs, pending);
   totalComparisons = comparisons.length;
   return true;
 }
@@ -1080,6 +1127,7 @@ function finalizeResult(decidedIdx) {
 // 9位とその次点が同率で、9位までの顔ぶれを一意に決められないかどうかを調べる
 function findAmbiguousTie() {
   const ranked = activeIndices().sort(compareIdols);
+  if (ranked.length <= 9) return null; // 9人以下なら全員表示されるため境界の同点判定は不要
   const boundaryRate = rate(ranked[8]);
   const countAbove = ranked.filter(i => rate(i) > boundaryRate).length;
   const tied = ranked.filter(i => rate(i) === boundaryRate);
@@ -1111,6 +1159,7 @@ function undo() {
     wins[last.winner]--;
     appearances[last.winner]--;
     appearances[last.loser]--;
+    delete beats[`${last.winner}-${last.loser}`];
   }
   if (last.excludedPair) {
     excluded.delete(last.excludedPair[0]);
@@ -1363,6 +1412,36 @@ async function buildShareImage(ranked) {
   }
 
   return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+}
+
+async function saveImage() {
+  if (!lastRanked.length) return;
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+  const originalLabel = saveBtn.textContent;
+  saveBtn.textContent = "画像を作成中…";
+
+  let blob;
+  try {
+    blob = await buildShareImage(lastRanked);
+  } catch (err) {
+    alert("画像の作成に失敗しました。お手数ですが、時間をおいてもう一度お試しください。");
+    saveBtn.disabled = false;
+    saveBtn.textContent = originalLabel;
+    return;
+  }
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lapone-favorite9.png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+  saveBtn.disabled = false;
+  saveBtn.textContent = originalLabel;
 }
 
 async function tweetResult() {
