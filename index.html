@@ -179,6 +179,13 @@
       margin-bottom: 1rem;
     }
 
+    .select-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
     .mode-select {
       display: flex;
       gap: 0.5rem;
@@ -530,6 +537,17 @@
       color: var(--text-muted);
       margin-bottom: 0.75rem;
     }
+    .tie-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--surface-1);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+    .tie-note.hidden { display: none; }
     .nine-emoji { width: 100%; height: 100%; }
     .nine-emoji img {
       width: 100%;
@@ -668,6 +686,53 @@
     }
     .save-btn:hover { border-color: var(--orange); color: var(--orange); }
 
+    .youtube-picks { margin-top: 1.75rem; }
+    .youtube-picks-title {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.9rem;
+    }
+    .youtube-picks-note {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .youtube-picks-group {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 0.6rem;
+    }
+    .youtube-picks-group-title { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 8px; }
+    .youtube-picks-videos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 8px;
+    }
+    .youtube-picks-video-title { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .youtube-picks-embed {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface-1);
+    }
+    .youtube-picks-embed iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .youtube-picks-comment { font-size: 11px; color: var(--text-secondary); line-height: 1.6; }
+
     @media (max-width: 480px) {
       .app { padding: 1.5rem 0.7rem 3rem; }
       .header h1 { font-size: 24px; }
@@ -736,6 +801,7 @@
       <button class="filter-btn" data-group="KO1KEYZ">KO1KEYZ</button>
     </div>
 
+    <div class="select-section-label">① 対戦モードを選ぶ</div>
     <div class="mode-select" id="modeSelect">
       <button class="mode-btn active" type="button" data-mode="quick">
         <div class="mode-btn-title">簡単モード</div>
@@ -744,6 +810,18 @@
       <button class="mode-btn" type="button" data-mode="full">
         <div class="mode-btn-title">ガチ全部比較</div>
         <div class="mode-btn-desc">全員を1対1で総当たり比較</div>
+      </button>
+    </div>
+
+    <div class="select-section-label">② 写真タイプを選ぶ</div>
+    <div class="mode-select" id="photoModeSelect">
+      <button class="mode-btn active" type="button" data-photo-mode="official">
+        <div class="mode-btn-title">公式写真</div>
+        <div class="mode-btn-desc">公式プロフィール写真で診断</div>
+      </button>
+      <button class="mode-btn" type="button" data-photo-mode="beginner">
+        <div class="mode-btn-title">顔じっくり比較</div>
+        <div class="mode-btn-desc">まだ全員の顔がわからない人におすすめ</div>
       </button>
     </div>
 
@@ -802,6 +880,7 @@
     </div>
 
     <p class="result-subtitle" id="resultSubtitle">対決を勝ち抜いたメンバーたちです</p>
+    <p class="tie-note hidden" id="tieNote"></p>
     <p class="nine-hint">↗ ボタンから公式プロフィールが開きます</p>
 
     <button class="more-btn hidden" id="moreBtn" onclick="toggleMore()">もっと見る</button>
@@ -813,6 +892,8 @@
       <button class="save-btn" id="saveBtn" onclick="saveImage()">画像だけ保存する</button>
       <button class="undo-btn" id="undoBtnResult" onclick="undo()" disabled>↩ 一つ前の対決に戻る</button>
     </div>
+
+    <div class="youtube-picks" id="youtubePicks"></div>
   </div>
 
   <div class="result-screen tie-screen" id="tieScreen">
@@ -828,50 +909,52 @@
       <button class="restart-btn" onclick="restart()">もう一度挑戦する</button>
       <button class="undo-btn" id="undoBtnTie" onclick="undo()" disabled>↩ 一つ前の対決に戻る</button>
     </div>
+
+    <div class="youtube-picks" id="youtubePicksTie"></div>
   </div>
 
 </div>
 
 <script>
 const ALL_IDOLS = [
-  { name:"豆原一成",     nameEn:"ISSEI",     group:"JO1",     photo:"image/ANIMAL_mamehara-issei.jpg",   profile:"https://jo1.jp/feature/profile_mamehara-issei" },
-  { name:"川尻蓮",       nameEn:"REN",       group:"JO1",     photo:"image/ANIMAL_kawashiri-ren.jpg",    profile:"https://jo1.jp/feature/profile_kawashiri-ren" },
-  { name:"川西拓実",     nameEn:"TAKUMI",    group:"JO1",     photo:"image/ANIMAL_kawanishi-takumi.jpg", profile:"https://jo1.jp/feature/profile_kawanishi-takumi" },
-  { name:"白岩瑠姫",     nameEn:"RUKI",      group:"JO1",     photo:"image/ANIMAL_shiroiwa-ruki.jpg",    profile:"https://jo1.jp/feature/profile_shiroiwa-ruki" },
-  { name:"佐藤景瑚",     nameEn:"KEIGO",     group:"JO1",     photo:"image/ANIMAL_sato-keigo.jpg",       profile:"https://jo1.jp/feature/profile_sato-keigo" },
-  { name:"木全翔也",     nameEn:"SHOYA",     group:"JO1",     photo:"image/ANIMAL_kimata-syoya.jpg",     profile:"https://jo1.jp/feature/profile_kimata-syoya" },
-  { name:"河野純喜",     nameEn:"JUNKI",     group:"JO1",     photo:"image/ANIMAL_kono-junki.jpg",       profile:"https://jo1.jp/feature/profile_kono-junki" },
-  { name:"金城碧海",     nameEn:"SUKAI",     group:"JO1",     photo:"image/ANIMAL_kinjo-sukai.jpg",      profile:"https://jo1.jp/feature/profile_kinjo-sukai" },
-  { name:"與那城奨",     nameEn:"SHO",       group:"JO1",     photo:"image/ANIMAL_yonashiro-sho.jpg",    profile:"https://jo1.jp/feature/profile_yonashiro-sho" },
-  { name:"木村柾哉",     nameEn:"MASAYA",    group:"INI",     photo:"image/kimura_masaya.jpg",     profile:"https://ini-official.com/feature/profile_kimura-masaya" },
-  { name:"髙塚大夢",     nameEn:"HIROMU",    group:"INI",     photo:"image/takatsuka_hiromu.jpg",  profile:"https://ini-official.com/feature/profile_takatsuka-hiromu" },
-  { name:"田島将吾",     nameEn:"SHOGO",     group:"INI",     photo:"image/tajima_shogo.jpg",      profile:"https://ini-official.com/feature/profile_tajima-shogo" },
-  { name:"藤牧京介",     nameEn:"KYOSUKE",   group:"INI",     photo:"image/fujimaki_kyosuke.jpg",  profile:"https://ini-official.com/feature/profile_fujimaki-kyosuke" },
-  { name:"尾崎匠海",     nameEn:"TAKUMI",    group:"INI",     photo:"image/ozaki_takumi.jpg",      profile:"https://ini-official.com/feature/profile_ozaki-takumi" },
-  { name:"西洸人",       nameEn:"HIROTO",    group:"INI",     photo:"image/nishi_hiroto.jpg",      profile:"https://ini-official.com/feature/profile_nishi-hiroto" },
-  { name:"松田迅",       nameEn:"JIN",       group:"INI",     photo:"image/matsuda_jin.jpg",       profile:"https://ini-official.com/feature/profile_matsuda-jin" },
-  { name:"許豊凡",       nameEn:"FENFAN",    group:"INI",     photo:"image/xu_fengfan.jpg",        profile:"https://ini-official.com/feature/profile_xu-fengfan" },
-  { name:"池﨑理人",     nameEn:"RIHITO",    group:"INI",     photo:"image/ikezaki_rihito.jpg",    profile:"https://ini-official.com/feature/profile_ikezaki-rihito" },
-  { name:"佐野雄大",     nameEn:"YUDAI",     group:"INI",     photo:"image/sano_yudai.jpg",        profile:"https://ini-official.com/feature/profile_sano-yudai" },
-  { name:"後藤威尊",     nameEn:"TAKERU",    group:"INI",     photo:"image/goto_takeru.jpg",       profile:"https://ini-official.com/feature/profile_goto-takeru" },
-  { name:"大久保波留",   nameEn:"NALU",      group:"DXTEEN",  photo:"image/Wanna_nalu_a.jpg",     profile:"https://dxteen.com/feature/profile_okubo_nalu" },
-  { name:"田中笑太郎",   nameEn:"SHOTARO",   group:"DXTEEN",  photo:"image/Wanna_shotaro_a.jpg",  profile:"https://dxteen.com/feature/profile_tanaka_shotaro" },
-  { name:"谷口太一",     nameEn:"TAICHI",    group:"DXTEEN",  photo:"image/Wanna_taichi_a.jpg",   profile:"https://dxteen.com/feature/profile_taniguchi_taichi" },
-  { name:"寺尾香信",     nameEn:"KOSHIN",    group:"DXTEEN",  photo:"image/Wanna_koshin_a.jpg",   profile:"https://dxteen.com/feature/profile_terao_koshin" },
-  { name:"平本健",       nameEn:"KEN",       group:"DXTEEN",  photo:"image/Wanna_ken_a.jpg",      profile:"https://dxteen.com/feature/profile_hiramoto_ken" },
-  { name:"福田歩汰",     nameEn:"AYUTA",     group:"DXTEEN",  photo:"image/Wanna_ayuta_a.jpg",    profile:"https://dxteen.com/feature/profile_fukuda_ayuta" },
-  { name:"加藤大樹",     nameEn:"DAIKI",     group:"KO1KEYZ", photo:"image/KO1KEYZ DAIKI_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/daiki" },
-  { name:"矢田佳暉",     nameEn:"YOSHIKI",   group:"KO1KEYZ", photo:"image/KO1KEYZ YOSHIKI_02.jpg",   profile:"https://shinsekai.produce101.jp/feature/yoshiki" },
-  { name:"パク・シヨン", nameEn:"SIYOUNG",   group:"KO1KEYZ", photo:"image/KO1KEYZ SIYOUNG_02.jpg",   profile:"https://shinsekai.produce101.jp/feature/siyoung" },
-  { name:"オ・シンヘン", nameEn:"SHINHAENG", group:"KO1KEYZ", photo:"image/KO1KEYZ SHINHAENG_02.jpg", profile:"https://shinsekai.produce101.jp/feature/shinhaeng" },
-  { name:"後藤結",       nameEn:"YUKI",      group:"KO1KEYZ", photo:"image/KO1KEYZ YUKI_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/yuki" },
-  { name:"柳谷伊冴",     nameEn:"ISSA",      group:"KO1KEYZ", photo:"image/KO1KEYZ ISSA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/issa" },
-  { name:"小野慶人",     nameEn:"KEITO",     group:"KO1KEYZ", photo:"image/KO1KEYZ KEITO_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/keito" },
-  { name:"安部結蘭",     nameEn:"YURA",      group:"KO1KEYZ", photo:"image/KO1KEYZ YURA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/yura" },
-  { name:"飯塚亮賀",     nameEn:"RYOGA",     group:"KO1KEYZ", photo:"image/KO1KEYZ RYOGA_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/ryoga" },
-  { name:"杉山竜司",     nameEn:"RYUJI",     group:"KO1KEYZ", photo:"image/KO1KEYZ RYUJI_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/ryuji" },
-  { name:"照井康祐",     nameEn:"KOSUKE",    group:"KO1KEYZ", photo:"image/KO1KEYZ KOSUKE_02.jpg",    profile:"https://shinsekai.produce101.jp/feature/kosuke" },
-  { name:"濱田永遠",     nameEn:"TOWA",      group:"KO1KEYZ", photo:"image/KO1KEYZ TOWA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/towa" },
+  { name:"豆原一成",     nameEn:"ISSEI",     group:"JO1",     photo:"image/ANIMAL_mamehara-issei.jpg",   photoBeginner:"image/mameharaissei.jpg",   profile:"https://jo1.jp/feature/profile_mamehara-issei" },
+  { name:"川尻蓮",       nameEn:"REN",       group:"JO1",     photo:"image/ANIMAL_kawashiri-ren.jpg",    photoBeginner:"image/kawashiriren.jpg",    profile:"https://jo1.jp/feature/profile_kawashiri-ren" },
+  { name:"川西拓実",     nameEn:"TAKUMI",    group:"JO1",     photo:"image/ANIMAL_kawanishi-takumi.jpg", photoBeginner:"image/kawanishitakumi.jpg", profile:"https://jo1.jp/feature/profile_kawanishi-takumi" },
+  { name:"白岩瑠姫",     nameEn:"RUKI",      group:"JO1",     photo:"image/ANIMAL_shiroiwa-ruki.jpg",    photoBeginner:"image/shiroiwaruki.jpg",    profile:"https://jo1.jp/feature/profile_shiroiwa-ruki" },
+  { name:"佐藤景瑚",     nameEn:"KEIGO",     group:"JO1",     photo:"image/ANIMAL_sato-keigo.jpg",       photoBeginner:"image/satokeigo.jpg",       profile:"https://jo1.jp/feature/profile_sato-keigo" },
+  { name:"木全翔也",     nameEn:"SHOYA",     group:"JO1",     photo:"image/ANIMAL_kimata-syoya.jpg",     photoBeginner:"image/kimatasyoya.jpg",     profile:"https://jo1.jp/feature/profile_kimata-syoya" },
+  { name:"河野純喜",     nameEn:"JUNKI",     group:"JO1",     photo:"image/ANIMAL_kono-junki.jpg",       photoBeginner:"image/konojunki.jpg",       profile:"https://jo1.jp/feature/profile_kono-junki" },
+  { name:"金城碧海",     nameEn:"SUKAI",     group:"JO1",     photo:"image/ANIMAL_kinjo-sukai.jpg",      photoBeginner:"image/kinjosuikai.jpg",     profile:"https://jo1.jp/feature/profile_kinjo-sukai" },
+  { name:"與那城奨",     nameEn:"SHO",       group:"JO1",     photo:"image/ANIMAL_yonashiro-sho.jpg",    photoBeginner:"image/yonashirosho.jpg",    profile:"https://jo1.jp/feature/profile_yonashiro-sho" },
+  { name:"木村柾哉",     nameEn:"MASAYA",    group:"INI",     photo:"image/kimura_masaya.jpg",     photoBeginner:"image/kimuramasaya.jpg",    profile:"https://ini-official.com/feature/profile_kimura-masaya" },
+  { name:"髙塚大夢",     nameEn:"HIROMU",    group:"INI",     photo:"image/takatsuka_hiromu.jpg",  photoBeginner:"image/takatsukahiromu.jpg", profile:"https://ini-official.com/feature/profile_takatsuka-hiromu" },
+  { name:"田島将吾",     nameEn:"SHOGO",     group:"INI",     photo:"image/tajima_shogo.jpg",      photoBeginner:"image/tajimashogo.jpg",     profile:"https://ini-official.com/feature/profile_tajima-shogo" },
+  { name:"藤牧京介",     nameEn:"KYOSUKE",   group:"INI",     photo:"image/fujimaki_kyosuke.jpg",  photoBeginner:"image/fujiakikyosuke.jpg",  profile:"https://ini-official.com/feature/profile_fujimaki-kyosuke" },
+  { name:"尾崎匠海",     nameEn:"TAKUMI",    group:"INI",     photo:"image/ozaki_takumi.jpg",      photoBeginner:"image/ozakitakumi.jpg",     profile:"https://ini-official.com/feature/profile_ozaki-takumi" },
+  { name:"西洸人",       nameEn:"HIROTO",    group:"INI",     photo:"image/nishi_hiroto.jpg",      photoBeginner:"image/nishihiroto.jpg",     profile:"https://ini-official.com/feature/profile_nishi-hiroto" },
+  { name:"松田迅",       nameEn:"JIN",       group:"INI",     photo:"image/matsuda_jin.jpg",       photoBeginner:"image/matsudajin.jpg",      profile:"https://ini-official.com/feature/profile_matsuda-jin" },
+  { name:"許豊凡",       nameEn:"FENFAN",    group:"INI",     photo:"image/xu_fengfan.jpg",        photoBeginner:"image/xufengfan.jpg",       profile:"https://ini-official.com/feature/profile_xu-fengfan" },
+  { name:"池﨑理人",     nameEn:"RIHITO",    group:"INI",     photo:"image/ikezaki_rihito.jpg",    photoBeginner:"image/ikezakirihito.jpg",   profile:"https://ini-official.com/feature/profile_ikezaki-rihito" },
+  { name:"佐野雄大",     nameEn:"YUDAI",     group:"INI",     photo:"image/sano_yudai.jpg",        photoBeginner:"image/sanoyudai.jpg",       profile:"https://ini-official.com/feature/profile_sano-yudai" },
+  { name:"後藤威尊",     nameEn:"TAKERU",    group:"INI",     photo:"image/goto_takeru.jpg",       photoBeginner:"image/gototakeru.jpg",      profile:"https://ini-official.com/feature/profile_goto-takeru" },
+  { name:"大久保波留",   nameEn:"NALU",      group:"DXTEEN",  photo:"image/Wanna_nalu_a.jpg",     photoBeginner:"image/okubonalu.jpg",       profile:"https://dxteen.com/feature/profile_okubo_nalu" },
+  { name:"田中笑太郎",   nameEn:"SHOTARO",   group:"DXTEEN",  photo:"image/Wanna_shotaro_a.jpg",  photoBeginner:"image/tanakashotaro.jpg",   profile:"https://dxteen.com/feature/profile_tanaka_shotaro" },
+  { name:"谷口太一",     nameEn:"TAICHI",    group:"DXTEEN",  photo:"image/Wanna_taichi_a.jpg",   photoBeginner:"image/taniguchitaichi.jpg", profile:"https://dxteen.com/feature/profile_taniguchi_taichi" },
+  { name:"寺尾香信",     nameEn:"KOSHIN",    group:"DXTEEN",  photo:"image/Wanna_koshin_a.jpg",   photoBeginner:"image/teraokoshin.jpg",     profile:"https://dxteen.com/feature/profile_terao_koshin" },
+  { name:"平本健",       nameEn:"KEN",       group:"DXTEEN",  photo:"image/Wanna_ken_a.jpg",      photoBeginner:"image/hiramotoken.jpg",     profile:"https://dxteen.com/feature/profile_hiramoto_ken" },
+  { name:"福田歩汰",     nameEn:"AYUTA",     group:"DXTEEN",  photo:"image/Wanna_ayuta_a.jpg",    photoBeginner:"image/fukudaayuta.jpg",     profile:"https://dxteen.com/feature/profile_fukuda_ayuta" },
+  { name:"加藤大樹",     nameEn:"DAIKI",     group:"KO1KEYZ", photo:"image/KO1KEYZ DAIKI_02.jpg",     photoBeginner:"image/KO1KEYZ DAIKI_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/daiki" },
+  { name:"矢田佳暉",     nameEn:"YOSHIKI",   group:"KO1KEYZ", photo:"image/KO1KEYZ YOSHIKI_02.jpg",   photoBeginner:"image/KO1KEYZ YOSHIKI_02.jpg",   profile:"https://shinsekai.produce101.jp/feature/yoshiki" },
+  { name:"パク・シヨン", nameEn:"SIYOUNG",   group:"KO1KEYZ", photo:"image/KO1KEYZ SIYOUNG_02.jpg",   photoBeginner:"image/KO1KEYZ SIYOUNG_02.jpg",   profile:"https://shinsekai.produce101.jp/feature/siyoung" },
+  { name:"オ・シンヘン", nameEn:"SHINHAENG", group:"KO1KEYZ", photo:"image/KO1KEYZ SHINHAENG_02.jpg", photoBeginner:"image/KO1KEYZ SHINHAENG_02.jpg", profile:"https://shinsekai.produce101.jp/feature/shinhaeng" },
+  { name:"後藤結",       nameEn:"YUKI",      group:"KO1KEYZ", photo:"image/KO1KEYZ YUKI_02.jpg",      photoBeginner:"image/KO1KEYZ YUKI_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/yuki" },
+  { name:"柳谷伊冴",     nameEn:"ISSA",      group:"KO1KEYZ", photo:"image/KO1KEYZ ISSA_02.jpg",      photoBeginner:"image/KO1KEYZ ISSA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/issa" },
+  { name:"小野慶人",     nameEn:"KEITO",     group:"KO1KEYZ", photo:"image/KO1KEYZ KEITO_02.jpg",     photoBeginner:"image/KO1KEYZ KEITO_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/keito" },
+  { name:"安部結蘭",     nameEn:"YURA",      group:"KO1KEYZ", photo:"image/KO1KEYZ YURA_02.jpg",      photoBeginner:"image/KO1KEYZ YURA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/yura" },
+  { name:"飯塚亮賀",     nameEn:"RYOGA",     group:"KO1KEYZ", photo:"image/KO1KEYZ RYOGA_02.jpg",     photoBeginner:"image/KO1KEYZ RYOGA_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/ryoga" },
+  { name:"杉山竜司",     nameEn:"RYUJI",     group:"KO1KEYZ", photo:"image/KO1KEYZ RYUJI_02.jpg",     photoBeginner:"image/KO1KEYZ RYUJI_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/ryuji" },
+  { name:"照井康祐",     nameEn:"KOSUKE",    group:"KO1KEYZ", photo:"image/KO1KEYZ KOSUKE_02.jpg",    photoBeginner:"image/KO1KEYZ KOSUKE_02.jpg",    profile:"https://shinsekai.produce101.jp/feature/kosuke" },
+  { name:"濱田永遠",     nameEn:"TOWA",      group:"KO1KEYZ", photo:"image/KO1KEYZ TOWA_02.jpg",      photoBeginner:"image/KO1KEYZ TOWA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/towa" },
 ];
 
 let idols = [];
@@ -883,7 +966,12 @@ let currentIdx = 0;
 let totalComparisons = 0;
 let selectedGroups = new Set();
 let compareMode = "quick";
+let photoMode = "official";
 let excluded = new Set();
+
+function idolPhoto(idol) {
+  return photoMode === "beginner" ? (idol.photoBeginner || idol.photo) : idol.photo;
+}
 let history = [];
 let pendingAdvanceTimer = null;
 let lastRanked = [];
@@ -990,7 +1078,7 @@ function showNext() {
 }
 
 function setCard(side, idol) {
-  document.getElementById("photo" + side).src = idol.photo;
+  document.getElementById("photo" + side).src = idolPhoto(idol);
   document.getElementById("groupTag" + side).textContent = idol.group;
   document.getElementById("name" + side).textContent = idol.name;
 }
@@ -1074,7 +1162,7 @@ function tryConclude() {
     }
     const ranked = activeIndices().sort(compareIdols);
     const decidedIdx = ranked.slice(0, ambiguous.countAbove);
-    finalizeResult(decidedIdx);
+    finalizeResult(decidedIdx, ambiguous.tied);
     return;
   }
 
@@ -1116,12 +1204,12 @@ function ensureTopConfirmed(topCount) {
   return true;
 }
 
-function finalizeResult(decidedIdx) {
+function finalizeResult(decidedIdx, tiedIdx) {
   if (ensureTopConfirmed(3)) {
     showNext();
     return;
   }
-  showResult(decidedIdx);
+  showResult(decidedIdx, tiedIdx);
 }
 
 // 9位とその次点が同率で、9位までの顔ぶれを一意に決められないかどうかを調べる
@@ -1229,7 +1317,7 @@ function spawnHeart(e) {
   setTimeout(() => h.remove(), 800);
 }
 
-function showResult(decidedIdx) {
+function showResult(decidedIdx, tiedIdx) {
   const totalAppearances = idols.reduce((sum, _, i) => sum + (appearances[i] || 0), 0);
   if (totalAppearances === 0) {
     showTieResult();
@@ -1250,6 +1338,16 @@ function showResult(decidedIdx) {
     ? "対決を勝ち抜いたメンバーたちです"
     : `同率で決着がつかなかったため、決まった${count}名だけの結果です`;
 
+  const tieNote = document.getElementById("tieNote");
+  if (count < 9 && tiedIdx && tiedIdx.length > 0) {
+    const tiedNames = tiedIdx.map(i => `${idols[i].name}（${idols[i].group}）`).join("・");
+    tieNote.textContent = `${count + 1}位で同率だったのは：${tiedNames}`;
+    tieNote.classList.remove("hidden");
+  } else {
+    tieNote.textContent = "";
+    tieNote.classList.add("hidden");
+  }
+
   const grid = document.getElementById("nineGrid");
   grid.innerHTML = "";
   ranked.forEach((idol, i) => {
@@ -1257,7 +1355,7 @@ function showResult(decidedIdx) {
     const cell = document.createElement("div");
     cell.className = "nine-cell" + (i === 0 ? " rank-1" : "");
     cell.innerHTML = `
-      <div class="nine-emoji"><img src="${idol.photo}" alt=""></div>
+      <div class="nine-emoji"><img src="${idolPhoto(idol)}" alt=""></div>
       <div class="nine-rank-badge">No.${rank}</div>
       <div class="nine-caption">
         <div class="nine-name">${idol.name}</div>
@@ -1290,6 +1388,7 @@ function showResult(decidedIdx) {
   document.getElementById("progressFill").style.width = "100%";
   document.getElementById("progressLabel").textContent = "診断完了！";
   document.getElementById("stageLabel").textContent = "結果発表";
+  renderYoutubePicks("youtubePicks");
 }
 
 function toggleMore() {
@@ -1310,7 +1409,7 @@ function toggleMore() {
     const item = document.createElement("div");
     item.className = "more-item";
     item.innerHTML = `
-      <div class="more-thumb"><img src="${idol.photo}" alt=""></div>
+      <div class="more-thumb"><img src="${idolPhoto(idol)}" alt=""></div>
       <div class="more-info">
         <div class="more-rank">No.${rank}</div>
         <div class="more-name">${idol.name}</div>
@@ -1334,6 +1433,78 @@ function showTieResult() {
   document.getElementById("progressFill").style.width = "100%";
   document.getElementById("progressLabel").textContent = "診断完了！";
   document.getElementById("stageLabel").textContent = "結果発表";
+  renderYoutubePicks("youtubePicksTie");
+}
+
+// あくまで個人のおすすめ。KO1KEYZはまだ企画コンテンツがないため対象外
+const YOUTUBE_PICKS = {
+  JO1: {
+    variety: { title: "購買ダッシュ", url: "https://youtu.be/2iCyScCdTuU?si=hVQjzIo1uW3655zW" },
+    performance: { title: "パフォーマンス", url: "https://youtu.be/Mx9QP_W261Q?si=NTJj-HCR_t6f0MQv" },
+    comment: "ドーム公演も控えているので是非！ラポネの長男、圧巻のパフォーマンスをとくとご覧あれ。"
+  },
+  INI: {
+    variety: { title: "学力テスト", url: "https://youtu.be/Z2yBVTYolOc?si=p-r3YYBUucQqiAHp" },
+    performance: { title: "パフォーマンス", url: "https://youtu.be/LE6TpU3aJh8?si=PHPyUDf7DKAzA5KV" },
+    comment: "なんてったって歌詞がいい！INIの雰囲気がよく伝わる、カッコよくも可愛くもある、メンバーがファンを思って作ってくれた曲。"
+  },
+  DXTEEN: {
+    variety: { title: "バレンタイン", url: "https://youtu.be/9-tiBmjUWB4?si=xcPNDqijxuJFW4iw" },
+    performance: { title: "パフォーマンス", url: "https://youtu.be/LyGqQWJo7FM?si=59yyzz6OtglIYoRH" },
+    comment: "ラポネ唯一(？)のバズりソングと言われている神曲！ダンスプラクティスの揃い方もすごいのでぜひ見てほしい。"
+  }
+};
+
+// youtu.be / youtube.com のURLから動画IDを取り出す
+function youtubeId(url) {
+  const m = url.match(/(?:youtu\.be\/|[?&]v=)([\w-]{11})/);
+  return m ? m[1] : "";
+}
+
+function renderYoutubePicks(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const groups = [...selectedGroups].filter(g => YOUTUBE_PICKS[g]);
+  if (groups.length === 0) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const videoEmbed = (video) => {
+    const id = youtubeId(video.url);
+    return `
+      <div class="youtube-picks-video">
+        <div class="youtube-picks-video-title">${video.title}</div>
+        <div class="youtube-picks-embed">
+          <iframe src="https://www.youtube.com/embed/${id}" title="${video.title}"
+            loading="lazy" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+    `;
+  };
+
+  container.innerHTML = `
+    <div class="youtube-picks-title">
+      ラポネをもっと知りたい人へ
+      <span class="youtube-picks-note">(あくまで私のおすすめです！)</span>
+    </div>
+    ${groups.map(g => {
+      const p = YOUTUBE_PICKS[g];
+      return `
+        <div class="youtube-picks-group">
+          <div class="youtube-picks-group-title">${g}が気になった人へ</div>
+          <div class="youtube-picks-videos">
+            ${videoEmbed(p.variety)}
+            ${videoEmbed(p.performance)}
+          </div>
+          <p class="youtube-picks-comment">${p.comment}</p>
+        </div>
+      `;
+    }).join("")}
+  `;
 }
 
 function restart() {
@@ -1355,7 +1526,7 @@ function loadImage(src) {
   });
 }
 
-function drawCover(ctx, img, dx, dy, dw, dh) {
+function drawCover(ctx, img, dx, dy, dw, dh, verticalBias) {
   const destRatio = dw / dh;
   const srcRatio = img.width / img.height;
   let sx, sy, sw, sh;
@@ -1368,8 +1539,9 @@ function drawCover(ctx, img, dx, dy, dw, dh) {
     sw = img.width;
     sh = sw / destRatio;
     sx = 0;
-    // 顔は写真の上部3分の1あたりにあることが多いため、中央ではなく上寄りをクロップする
-    sy = (img.height - sh) * 0.15;
+    // 公式写真は顔が上部3分の1あたりにあるため上寄りにクロップし、
+    // 初心者版(独自セレクト写真)は顔が中央にあるため中央のままクロップする
+    sy = (img.height - sh) * (verticalBias ?? 0.15);
   }
   ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
 }
@@ -1383,7 +1555,7 @@ async function buildShareImage(ranked) {
   canvas.height = size;
   const ctx = canvas.getContext("2d");
 
-  const images = await Promise.all(ranked.map(idol => loadImage(idol.photo)));
+  const images = await Promise.all(ranked.map(idol => loadImage(idolPhoto(idol))));
 
   const centerCell = 4;
   const outerCells = [0, 1, 2, 3, 5, 6, 7, 8];
@@ -1395,7 +1567,7 @@ async function buildShareImage(ranked) {
     const x = col * cell, y = row * cell;
     const img = cellToImage[cellIdx];
     if (img) {
-      drawCover(ctx, img, x, y, cell, cell);
+      drawCover(ctx, img, x, y, cell, cell, photoMode === "beginner" ? 0.5 : 0.15);
     } else {
       // 9位まで決まらなかった枠は白抜きにする
       ctx.fillStyle = "#ffffff";
@@ -1556,12 +1728,21 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
 });
 
 // Mode selection (quick / full round-robin)
-document.querySelectorAll(".mode-btn").forEach(btn => {
+document.querySelectorAll("#modeSelect .mode-btn").forEach(btn => {
   btn.addEventListener("click", function () {
-    document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll("#modeSelect .mode-btn").forEach(b => b.classList.remove("active"));
     this.classList.add("active");
     compareMode = this.dataset.mode;
     updateSelectMeta();
+  });
+});
+
+// Photo mode selection (official / beginner-friendly curated photos)
+document.querySelectorAll("#photoModeSelect .mode-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll("#photoModeSelect .mode-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    photoMode = this.dataset.photoMode;
   });
 });
 
