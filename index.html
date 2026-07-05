@@ -799,6 +799,7 @@
       <button class="filter-btn" data-group="INI">INI</button>
       <button class="filter-btn" data-group="DXTEEN">DXTEEN</button>
       <button class="filter-btn" data-group="KO1KEYZ">KO1KEYZ</button>
+      <button class="filter-btn" data-group="ZB1">ZB1</button>
     </div>
 
     <div class="select-section-label">① 対戦モードを選ぶ</div>
@@ -955,6 +956,11 @@ const ALL_IDOLS = [
   { name:"杉山竜司",     nameEn:"RYUJI",     group:"KO1KEYZ", photo:"image/KO1KEYZ RYUJI_02.jpg",     photoBeginner:"image/KO1KEYZ RYUJI_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/ryuji" },
   { name:"照井康祐",     nameEn:"KOSUKE",    group:"KO1KEYZ", photo:"image/KO1KEYZ KOSUKE_02.jpg",    photoBeginner:"image/KO1KEYZ KOSUKE_02.jpg",    profile:"https://shinsekai.produce101.jp/feature/kosuke" },
   { name:"濱田永遠",     nameEn:"TOWA",      group:"KO1KEYZ", photo:"image/KO1KEYZ TOWA_02.jpg",      photoBeginner:"image/KO1KEYZ TOWA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/towa" },
+  { name:"ソン・ハンビン", nameEn:"HANBIN",  group:"ZB1", photo:"image/SUNGHANBIN.jpg",  photoBeginner:"image/SUNGHANBIN.jpg",  profile:"https://zerobaseone.jp/feature/profile_sung_han_bin" },
+  { name:"キム・ジウン",   nameEn:"JIWOONG", group:"ZB1", photo:"image/KIMJIWOONG.jpg",  photoBeginner:"image/KIMJIWOONG.jpg",  profile:"https://zerobaseone.jp/feature/profile_kim_ji_woong" },
+  { name:"キム・テレ",     nameEn:"TAERAE",  group:"ZB1", photo:"image/KIMTAERAE.jpg",   photoBeginner:"image/KIMTAERAE.jpg",   profile:"https://zerobaseone.jp/feature/profile_kim_tae_rae" },
+  { name:"パク・ゴヌク",   nameEn:"GUNWOOK", group:"ZB1", photo:"image/PARKGUNWOOK.jpg", photoBeginner:"image/PARKGUNWOOK.jpg", profile:"https://zerobaseone.jp/feature/profile_park_gun_wook" },
+  { name:"ソク・マシュー", nameEn:"MATTHEW", group:"ZB1", photo:"image/SEOKMATTHEW.jpg", photoBeginner:"image/SEOKMATTHEW.jpg", profile:"https://zerobaseone.jp/feature/profile_seok_matthew" },
 ];
 
 let idols = [];
@@ -973,9 +979,10 @@ function idolPhoto(idol) {
   return photoMode === "beginner" ? (idol.photoBeginner || idol.photo) : idol.photo;
 }
 
-// KO1KEYZは初心者版でも公式写真のままなので、顔が上部にある前提で上寄りクロップする
+// KO1KEYZ・ZB1は初心者向けでも公式写真のままなので、顔が上部にある前提で上寄りクロップする
+const SAME_PHOTO_GROUPS = new Set(["KO1KEYZ", "ZB1"]);
 function idolCropPosition(idol) {
-  const useCenter = photoMode === "beginner" && idol.group !== "KO1KEYZ";
+  const useCenter = photoMode === "beginner" && !SAME_PHOTO_GROUPS.has(idol.group);
   return useCenter ? "center 50%" : "center 20%";
 }
 let history = [];
@@ -1581,7 +1588,7 @@ async function buildShareImage(ranked) {
     if (img) {
       // KO1KEYZは初心者版でも公式写真のままなので、顔が上部にある前提で上寄りクロップする
       const idolAtCell = cellToIdol[cellIdx];
-      const useTopCrop = photoMode !== "beginner" || (idolAtCell && idolAtCell.group === "KO1KEYZ");
+      const useTopCrop = photoMode !== "beginner" || (idolAtCell && SAME_PHOTO_GROUPS.has(idolAtCell.group));
       drawCover(ctx, img, x, y, cell, cell, useTopCrop ? 0.15 : 0.5);
     } else {
       // 9位まで決まらなかった枠は白抜きにする
