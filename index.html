@@ -972,6 +972,12 @@ let excluded = new Set();
 function idolPhoto(idol) {
   return photoMode === "beginner" ? (idol.photoBeginner || idol.photo) : idol.photo;
 }
+
+// KO1KEYZは初心者版でも公式写真のままなので、顔が上部にある前提で上寄りクロップする
+function idolCropPosition(idol) {
+  const useCenter = photoMode === "beginner" && idol.group !== "KO1KEYZ";
+  return useCenter ? "center 50%" : "center 20%";
+}
 let history = [];
 let pendingAdvanceTimer = null;
 let lastRanked = [];
@@ -1078,7 +1084,9 @@ function showNext() {
 }
 
 function setCard(side, idol) {
-  document.getElementById("photo" + side).src = idolPhoto(idol);
+  const photoEl = document.getElementById("photo" + side);
+  photoEl.src = idolPhoto(idol);
+  photoEl.style.objectPosition = idolCropPosition(idol);
   document.getElementById("groupTag" + side).textContent = idol.group;
   document.getElementById("name" + side).textContent = idol.name;
 }
@@ -1355,7 +1363,7 @@ function showResult(decidedIdx, tiedIdx) {
     const cell = document.createElement("div");
     cell.className = "nine-cell" + (i === 0 ? " rank-1" : "");
     cell.innerHTML = `
-      <div class="nine-emoji"><img src="${idolPhoto(idol)}" alt=""></div>
+      <div class="nine-emoji"><img src="${idolPhoto(idol)}" alt="" style="object-position:${idolCropPosition(idol)}"></div>
       <div class="nine-rank-badge">No.${rank}</div>
       <div class="nine-caption">
         <div class="nine-name">${idol.name}</div>
@@ -1409,7 +1417,7 @@ function toggleMore() {
     const item = document.createElement("div");
     item.className = "more-item";
     item.innerHTML = `
-      <div class="more-thumb"><img src="${idolPhoto(idol)}" alt=""></div>
+      <div class="more-thumb"><img src="${idolPhoto(idol)}" alt="" style="object-position:${idolCropPosition(idol)}"></div>
       <div class="more-info">
         <div class="more-rank">No.${rank}</div>
         <div class="more-name">${idol.name}</div>
@@ -1560,14 +1568,21 @@ async function buildShareImage(ranked) {
   const centerCell = 4;
   const outerCells = [0, 1, 2, 3, 5, 6, 7, 8];
   const cellToImage = { [centerCell]: images[0] || null };
-  outerCells.forEach((cellIdx, i) => { cellToImage[cellIdx] = images[i + 1] || null; });
+  const cellToIdol = { [centerCell]: ranked[0] || null };
+  outerCells.forEach((cellIdx, i) => {
+    cellToImage[cellIdx] = images[i + 1] || null;
+    cellToIdol[cellIdx] = ranked[i + 1] || null;
+  });
 
   for (let cellIdx = 0; cellIdx < 9; cellIdx++) {
     const col = cellIdx % 3, row = Math.floor(cellIdx / 3);
     const x = col * cell, y = row * cell;
     const img = cellToImage[cellIdx];
     if (img) {
-      drawCover(ctx, img, x, y, cell, cell, photoMode === "beginner" ? 0.5 : 0.15);
+      // KO1KEYZは初心者版でも公式写真のままなので、顔が上部にある前提で上寄りクロップする
+      const idolAtCell = cellToIdol[cellIdx];
+      const useTopCrop = photoMode !== "beginner" || (idolAtCell && idolAtCell.group === "KO1KEYZ");
+      drawCover(ctx, img, x, y, cell, cell, useTopCrop ? 0.15 : 0.5);
     } else {
       // 9位まで決まらなかった枠は白抜きにする
       ctx.fillStyle = "#ffffff";
