@@ -786,6 +786,18 @@
       border-color: var(--orange);
       color: var(--orange);
     }
+    .site-nav.hidden { display: none; }
+    .nav-new-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 800;
+      color: #fff;
+      background: var(--orange);
+      padding: 1px 5px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -798,10 +810,10 @@
   </div>
 
 
-  <nav class="site-nav">
+  <nav class="site-nav" id="siteNav">
     <a href="./index.html" class="current">好き顔9選</a>
-    <a href="./tsukiaitai/index.html">付き合いたい人9選</a>
-    <a href="./kekkon/index.html">結婚したい人9選</a>
+    <a href="./tsukiaitai/index.html">付き合いたい人9選<span class="nav-new-badge">NEW</span></a>
+    <a href="./kekkon/index.html">結婚したい人9選<span class="nav-new-badge">NEW</span></a>
   </nav>
 
   <div class="select-screen" id="selectScreen">
@@ -1564,6 +1576,7 @@ function restart() {
   document.getElementById("tieScreen").classList.remove("active");
   document.getElementById("battleScreen").classList.add("hidden");
   document.getElementById("selectScreen").classList.remove("hidden");
+  document.getElementById("siteNav").classList.remove("hidden");
 }
 
 const SHARE_URL = "https://dbsdcjn.github.io/lapone-lanking/";
@@ -1808,6 +1821,7 @@ document.getElementById("startBtn").addEventListener("click", () => {
   if (selectedGroups.size < 2) return;
   document.getElementById("selectScreen").classList.add("hidden");
   document.getElementById("battleScreen").classList.remove("hidden");
+  document.getElementById("siteNav").classList.add("hidden");
   initGame();
 });
 </script>
