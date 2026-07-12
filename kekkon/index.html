@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LAPONE 結婚したい人診断</title>
+
+  <meta property="og:title" content="あなたの結婚したい人9選 | LAPONE結婚したい人診断">
+  <meta property="og:description" content="結婚したい人を選ぶだけで、あなただけのランキングが完成">
+  <meta property="og:image" content="https://dbsdcjn.github.io/lapone-lanking/image/ogp-image.png">
+  <meta property="og:url" content="https://dbsdcjn.github.io/lapone-lanking/">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="あなたの結婚したい人9選 | LAPONE結婚したい人診断">
+  <meta name="twitter:description" content="結婚したい人を選ぶだけで、あなただけのランキングが完成">
+  <meta name="twitter:image" content="https://dbsdcjn.github.io/lapone-lanking/image/ogp-image.png">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+    :root {
+      --orange: #E63950;
+      --orange-light: #ffe0e3;
+      --orange-pale: #fff2f3;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666;
+      --text-muted: #999;
+      --surface-0: #ffffff;
+      --surface-1: #f0f0f0;
+      --surface-2: #ffffff;
+      --border: rgba(0,0,0,0.1);
+      --border-strong: rgba(0,0,0,0.18);
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-primary: #f0f0f0;
+        --text-secondary: #aaa;
+        --text-muted: #666;
+        --surface-0: #111;
+        --surface-1: #1e1e1e;
+        --surface-2: #252525;
+        --border: rgba(255,255,255,0.1);
+        --border-strong: rgba(255,255,255,0.18);
+        --orange-pale: #3a1518;
+      }
+    }
+
+    body {
+      font-family: "Zen Maru Gothic", -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      background: var(--surface-0);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 2rem; }
+    .header-badge {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+    .header p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* Group filter */
+    .group-filter {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-2);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn::before {
+      content: "";
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: var(--orange); }
+    .filter-btn.active {
+      border-color: var(--orange);
+      background: var(--orange-pale);
+      color: var(--orange);
+    }
+    .filter-btn.active::before {
+      content: "✓";
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .select-screen.hidden { display: none; }
+
+    .how-to {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.75rem;
+    }
+    .how-to-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+    }
+    .how-to-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .how-to-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .how-to-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    .select-hint {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .select-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .mode-select {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .mode-btn {
+      flex: 1;
+      text-align: center;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-2);
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .mode-btn:hover { border-color: var(--orange); }
+    .mode-btn.active {
+      border-color: var(--orange);
+      background: var(--orange-pale);
+    }
+    .mode-btn-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .mode-btn.active .mode-btn-title { color: var(--orange); }
+    .mode-btn-desc { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .select-meta {
+      text-align: center;
+      font-size: 12px;
+      color: var(--orange);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      min-height: 16px;
+    }
+    .start-btn {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 13px;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .start-btn:hover { opacity: 0.88; }
+    .start-btn:disabled {
+      background: var(--surface-1);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    /* Progress */
+    .progress-bar-wrap {
+      background: var(--surface-1);
+      border-radius: 999px;
+      height: 6px;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--orange);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+    .stage-label {
+      text-align: center;
+      font-size: 13px;
+      color: var(--orange);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Battle */
+    .vs-section {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .idol-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, opacity 0.25s, filter 0.25s;
+      user-select: none;
+    }
+    .idol-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--orange);
+      box-shadow: 0 6px 20px rgba(230,57,80,0.18);
+    }
+    .idol-card:active { transform: scale(0.97); }
+    .idol-card.chosen {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px var(--orange), 0 10px 26px rgba(230,57,80,0.4);
+      animation: chosen-flash 0.4s ease;
+    }
+    .idol-card.unchosen { opacity: 0.3; filter: grayscale(60%); transform: scale(0.97); }
+
+    @keyframes chosen-flash {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+
+    .idol-avatar {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      margin: 0;
+      background: var(--surface-1);
+      position: relative;
+      overflow: hidden;
+    }
+    .idol-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+    .idol-caption {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 18px 10px 8px;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+      text-align: left;
+    }
+    .idol-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      margin-bottom: 1px;
+    }
+    .idol-group-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .choose-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+    .choose-arrow-btn {
+      padding: 14px 8px;
+      background: var(--surface-2);
+      color: var(--orange);
+      border: 2px solid var(--orange);
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s, background 0.15s;
+    }
+    .choose-arrow-btn:hover { background: var(--orange-pale); }
+    .choose-arrow-btn:active { transform: scale(0.97); }
+
+    .both-like-btn {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 13px;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      transition: opacity 0.15s;
+      box-shadow: 0 4px 14px rgba(230,57,80,0.3);
+    }
+    .both-like-btn:hover { opacity: 0.88; }
+
+    .skip-btn {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 11px;
+      margin-bottom: 0.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      border-radius: 999px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .skip-btn:hover { color: var(--orange); }
+
+    .undo-btn {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .undo-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .undo-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .vs-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(230,57,80,0.4);
+      border: 3px solid var(--surface-0);
+    }
+
+    /* Heart burst animation */
+    .heart-burst {
+      position: fixed;
+      pointer-events: none;
+      font-size: 24px;
+      color: var(--orange);
+      animation: burst 0.7s ease forwards;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+    @keyframes burst {
+      0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+      100% { transform: translate(-50%, -120%) scale(1.4); opacity: 0; }
+    }
+
+    /* Result */
+    .result-screen { display: none; }
+    .result-screen.active { display: block; }
+    .battle-screen.hidden { display: none; }
+
+    .header.hidden { display: none; }
+
+    .result-header { text-align: center; margin-bottom: 1.5rem; }
+    .result-badge {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 8px 24px;
+      border-radius: 999px;
+      margin-bottom: 0.9rem;
+      box-shadow: 0 4px 16px rgba(230,57,80,0.35);
+    }
+    .result-title { font-size: 22px; font-weight: 700; color: var(--orange); letter-spacing: 0.02em; margin-bottom: 0.4rem; }
+    .result-subtitle { text-align: center; font-size: 14px; color: var(--text-secondary); margin-bottom: 0.5rem; }
+
+    .tie-emoji {
+      text-align: center;
+      font-size: 48px;
+      margin: 2.5rem 0;
+      animation: tie-wobble 1.4s ease-in-out infinite;
+    }
+    @keyframes tie-wobble {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.08) rotate(-4deg); }
+      75% { transform: scale(1.08) rotate(4deg); }
+    }
+
+    /* Result frame: 正方形の9マスで写真を大きく見せる */
+    .result-frame {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto 0.75rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+    }
+    .result-frame-header { text-align: center; margin-bottom: 10px; }
+    .result-frame-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 0.08em;
+    }
+    .result-frame-title { font-size: 17px; font-weight: 800; color: var(--text-primary); }
+
+    .nine-grid {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .nine-cell {
+      position: relative;
+      min-height: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface-1);
+    }
+    .nine-cell.rank-1 {
+      grid-column: 2;
+      grid-row: 2;
+      border: 2px solid var(--orange);
+      box-shadow: 0 4px 16px rgba(230,57,80,0.4);
+      z-index: 1;
+    }
+    .nine-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .tie-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      background: var(--surface-1);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+    .tie-note.hidden { display: none; }
+    .nine-emoji { width: 100%; height: 100%; }
+    .nine-emoji img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+    .nine-rank-badge {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(0,0,0,0.55);
+      padding: 2px 6px;
+      border-radius: 999px;
+    }
+    .nine-caption {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 12px 8px 6px;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+    }
+    .nine-name { font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); line-height: 1.2; }
+    .nine-group { font-size: 10px; color: rgba(255,255,255,0.85); }
+    .nine-profile-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      color: var(--orange);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nine-profile-btn:hover { background: var(--orange); color: #fff; }
+
+    .more-btn {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto 0.75rem;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      border-radius: 999px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .more-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .more-btn.hidden { display: none; }
+
+    .more-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .more-list.hidden { display: none; }
+    .more-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+    .more-thumb {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface-1);
+    }
+    .more-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+    .more-info { flex: 1; min-width: 0; }
+    .more-rank { font-size: 10px; font-weight: 700; color: var(--orange); }
+    .more-name { font-size: 13px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .more-group { font-size: 10px; color: var(--text-muted); }
+    .more-profile-btn {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--orange-pale);
+      color: var(--orange);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .more-profile-btn:hover { background: var(--orange); color: #fff; }
+
+    .action-btns { display: flex; flex-direction: column; gap: 0.6rem; }
+    .restart-btn {
+      display: block; width: 100%; max-width: 360px; margin-left: auto; margin-right: auto; padding: 13px;
+      background: var(--orange); color: white; border: none;
+      border-radius: 999px; font-size: 15px; font-weight: 600;
+      font-family: inherit; cursor: pointer; transition: opacity 0.15s;
+    }
+    .restart-btn:hover { opacity: 0.88; }
+    .share-btn {
+      display: block; width: 100%; max-width: 360px; margin-left: auto; margin-right: auto; padding: 12px;
+      background: transparent; color: var(--orange);
+      border: 1px solid var(--orange); border-radius: 999px;
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: background 0.15s, color 0.15s;
+    }
+    .share-btn:hover { background: var(--orange); color: white; }
+    .save-btn {
+      display: block; width: 100%; max-width: 360px; margin-left: auto; margin-right: auto; padding: 12px;
+      background: transparent; color: var(--text-secondary);
+      border: 1px solid var(--border-strong); border-radius: 999px;
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    }
+    .save-btn:hover { border-color: var(--orange); color: var(--orange); }
+
+    .youtube-picks { margin-top: 1.75rem; }
+    .youtube-picks-title {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.9rem;
+    }
+    .youtube-picks-note {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .youtube-picks-group {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 0.6rem;
+    }
+    .youtube-picks-group-title { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 8px; }
+    .youtube-picks-videos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 8px;
+    }
+    .youtube-picks-video-title { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+    .youtube-picks-embed {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface-1);
+    }
+    .youtube-picks-embed iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .youtube-picks-comment { font-size: 11px; color: var(--text-secondary); line-height: 1.6; }
+
+    @media (max-width: 480px) {
+      .app { padding: 1.5rem 0.7rem 3rem; }
+      .header h1 { font-size: 24px; }
+
+      .vs-section { gap: 0.5rem; }
+      .idol-name { font-size: 14px; }
+      .vs-badge { width: 42px; height: 42px; font-size: 12px; }
+
+      .choose-row { gap: 0.5rem; }
+      .choose-arrow-btn { padding: 12px 6px; font-size: 13px; }
+      .both-like-btn, .skip-btn { padding: 11px; font-size: 12px; }
+      .filter-btn { padding: 8px 14px; font-size: 13px; }
+      .start-btn, .restart-btn { padding: 15px; }
+
+      .result-frame { padding: 10px 10px 8px; }
+      .nine-grid { gap: 4px; }
+    }
+
+    @media (max-width: 360px) {
+      .vs-section {
+        grid-template-columns: 1fr;
+      }
+      .vs-badge { justify-self: center; }
+    }
+
+    /* Cross-site nav */
+    .site-nav {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .site-nav a:hover { border-color: var(--orange); color: var(--orange); }
+    .site-nav a.current {
+      background: var(--orange-pale);
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header" id="pageHeader">
+    <div class="header-badge">LAPONE × 結婚したい人診断</div>
+    <h1>あなたの結婚したい人9選</h1>
+    <p>直感で選ぶだけ！<br>最後にあなただけのランキングが完成</p>
+  </div>
+
+
+  <nav class="site-nav">
+    <a href="../index.html">好き顔9選</a>
+    <a href="../tsukiaitai/index.html">付き合いたい人9選</a>
+    <a href="./index.html" class="current">結婚したい人9選</a>
+  </nav>
+
+  <div class="select-screen" id="selectScreen">
+    <div class="how-to">
+      <div class="how-to-step">
+        <span class="how-to-num">1</span>
+        <div>
+          <div class="how-to-title">グループを選ぶ</div>
+          <div class="how-to-desc">気になるグループを2つ以上チェック</div>
+        </div>
+      </div>
+      <div class="how-to-step">
+        <span class="how-to-num">2</span>
+        <div>
+          <div class="how-to-title">直感で選ぶ</div>
+          <div class="how-to-desc">2人のうちどちらと結婚したいか選ぶだけ</div>
+        </div>
+      </div>
+      <div class="how-to-step">
+        <span class="how-to-num">3</span>
+        <div>
+          <div class="how-to-title">結果が完成</div>
+          <div class="how-to-desc">あなただけの結婚したい人ランキングが誕生</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="select-hint">✓ 2グループ以上選ぶと診断できます</p>
+    <div class="group-filter" id="groupFilter">
+      <button class="filter-btn" data-group="JO1">JO1</button>
+      <button class="filter-btn" data-group="INI">INI</button>
+      <button class="filter-btn" data-group="DXTEEN">DXTEEN</button>
+      <button class="filter-btn" data-group="KO1KEYZ">KO1KEYZ</button>
+      <button class="filter-btn" data-group="ZB1">ZB1</button>
+    </div>
+
+    <div class="select-section-label">① 対戦モードを選ぶ</div>
+    <div class="mode-select" id="modeSelect">
+      <button class="mode-btn active" type="button" data-mode="quick">
+        <div class="mode-btn-title">簡単モード</div>
+        <div class="mode-btn-desc">サクッと診断できる目安の対戦数</div>
+      </button>
+      <button class="mode-btn" type="button" data-mode="full">
+        <div class="mode-btn-title">ガチ全部比較</div>
+        <div class="mode-btn-desc">全員を1対1で総当たり比較</div>
+      </button>
+    </div>
+
+    <div class="select-section-label">② 写真タイプを選ぶ</div>
+    <div class="mode-select" id="photoModeSelect">
+      <button class="mode-btn active" type="button" data-photo-mode="official">
+        <div class="mode-btn-title">オタク向け</div>
+        <div class="mode-btn-desc">公式アー写でガチ勢向け</div>
+      </button>
+      <button class="mode-btn" type="button" data-photo-mode="beginner">
+        <div class="mode-btn-title">初心者向け</div>
+        <div class="mode-btn-desc">まだ顔がわからない人向け</div>
+      </button>
+    </div>
+
+    <p class="select-meta" id="selectMeta"></p>
+    <button class="start-btn" id="startBtn" disabled>診断スタート</button>
+  </div>
+
+  <div class="battle-screen hidden" id="battleScreen">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">対決 1 / ?</div>
+    <div class="stage-label" id="stageLabel">対決スタート</div>
+
+    <div class="vs-section">
+      <div class="idol-card" id="cardA" onclick="choose(0, event)">
+        <div class="idol-avatar" id="avatarA">
+          <img id="photoA" alt="">
+          <div class="idol-caption">
+            <div class="idol-name" id="nameA"></div>
+            <div class="idol-group-tag" id="groupTagA"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vs-badge">VS</div>
+
+      <div class="idol-card" id="cardB" onclick="choose(1, event)">
+        <div class="idol-avatar" id="avatarB">
+          <img id="photoB" alt="">
+          <div class="idol-caption">
+            <div class="idol-name" id="nameB"></div>
+            <div class="idol-group-tag" id="groupTagB"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="choose-row">
+      <button class="choose-arrow-btn" onclick="choose(0, event)">← 左と結婚したい</button>
+      <button class="choose-arrow-btn" onclick="choose(1, event)">右と結婚したい →</button>
+    </div>
+
+    <button class="both-like-btn" onclick="skip()">どっちとも結婚したい</button>
+    <button class="skip-btn" onclick="excludeAndSkip()">わからない</button>
+    <button class="undo-btn" id="undoBtn" onclick="undo()" disabled>↩ ひとつ戻る</button>
+  </div>
+
+  <div class="result-screen" id="resultScreen">
+    <div class="result-frame" id="resultFrame">
+      <div class="result-frame-header">
+        <div class="result-frame-badge">診断結果</div>
+        <div class="result-frame-title" id="resultTitle">あなたの結婚したい人9選 ✦</div>
+      </div>
+      <div class="nine-grid" id="nineGrid"></div>
+    </div>
+
+    <p class="result-subtitle" id="resultSubtitle">対決を勝ち抜いたメンバーたちです</p>
+    <p class="tie-note hidden" id="tieNote"></p>
+    <p class="nine-hint">↗ ボタンから公式プロフィールが開きます</p>
+
+    <button class="more-btn hidden" id="moreBtn" onclick="toggleMore()">もっと見る</button>
+    <div class="more-list hidden" id="moreList"></div>
+
+    <div class="action-btns">
+      <button class="restart-btn" onclick="restart()">もう一度診断する</button>
+      <button class="share-btn" id="shareBtn" onclick="tweetResult()">画像でXにシェアする ↗</button>
+      <button class="save-btn" id="saveBtn" onclick="saveImage()">画像だけ保存する</button>
+      <button class="undo-btn" id="undoBtnResult" onclick="undo()" disabled>↩ 一つ前の対決に戻る</button>
+    </div>
+
+    <div class="youtube-picks" id="youtubePicks"></div>
+  </div>
+
+  <div class="result-screen tie-screen" id="tieScreen">
+    <div class="result-header">
+      <div class="result-badge">診断結果</div>
+      <div class="result-title">全員尊すぎて決められなかった…！</div>
+      <div class="result-subtitle">あなたは全員と結婚したい欲張りさんでした</div>
+    </div>
+
+    <div class="tie-emoji">♡ ♡ ♡</div>
+
+    <div class="action-btns">
+      <button class="restart-btn" onclick="restart()">もう一度挑戦する</button>
+      <button class="undo-btn" id="undoBtnTie" onclick="undo()" disabled>↩ 一つ前の対決に戻る</button>
+    </div>
+
+    <div class="youtube-picks" id="youtubePicksTie"></div>
+  </div>
+
+</div>
+
+<script>
+const ALL_IDOLS = [
+  { name:"豆原一成",     nameEn:"ISSEI",     group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_mamehara-issei.jpg",   photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/mameharaissei.jpg",   profile:"https://jo1.jp/feature/profile_mamehara-issei" },
+  { name:"川尻蓮",       nameEn:"REN",       group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_kawashiri-ren.jpg",    photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/kawashiriren.jpg",    profile:"https://jo1.jp/feature/profile_kawashiri-ren" },
+  { name:"川西拓実",     nameEn:"TAKUMI",    group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_kawanishi-takumi.jpg", photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/kawanishitakumi.jpg", profile:"https://jo1.jp/feature/profile_kawanishi-takumi" },
+  { name:"白岩瑠姫",     nameEn:"RUKI",      group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_shiroiwa-ruki.jpg",    photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/shiroiwaruki.jpg",    profile:"https://jo1.jp/feature/profile_shiroiwa-ruki" },
+  { name:"佐藤景瑚",     nameEn:"KEIGO",     group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_sato-keigo.jpg",       photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/satokeigo.jpg",       profile:"https://jo1.jp/feature/profile_sato-keigo" },
+  { name:"木全翔也",     nameEn:"SHOYA",     group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_kimata-syoya.jpg",     photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/kimatasyoya.jpg",     profile:"https://jo1.jp/feature/profile_kimata-syoya" },
+  { name:"河野純喜",     nameEn:"JUNKI",     group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_kono-junki.jpg",       photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/konojunki.jpg",       profile:"https://jo1.jp/feature/profile_kono-junki" },
+  { name:"金城碧海",     nameEn:"SUKAI",     group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_kinjo-sukai.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/kinjosuikai.jpg",     profile:"https://jo1.jp/feature/profile_kinjo-sukai" },
+  { name:"與那城奨",     nameEn:"SHO",       group:"JO1",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ANIMAL_yonashiro-sho.jpg",    photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/yonashirosho.jpg",    profile:"https://jo1.jp/feature/profile_yonashiro-sho" },
+  { name:"木村柾哉",     nameEn:"MASAYA",    group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/kimura_masaya.jpg",     photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/kimuramasaya.jpg",    profile:"https://ini-official.com/feature/profile_kimura-masaya" },
+  { name:"髙塚大夢",     nameEn:"HIROMU",    group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/takatsuka_hiromu.jpg",  photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/takatsukahiromu.jpg", profile:"https://ini-official.com/feature/profile_takatsuka-hiromu" },
+  { name:"田島将吾",     nameEn:"SHOGO",     group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/tajima_shogo.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/tajimashogo.jpg",     profile:"https://ini-official.com/feature/profile_tajima-shogo" },
+  { name:"藤牧京介",     nameEn:"KYOSUKE",   group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/fujimaki_kyosuke.jpg",  photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/fujiakikyosuke.jpg",  profile:"https://ini-official.com/feature/profile_fujimaki-kyosuke" },
+  { name:"尾崎匠海",     nameEn:"TAKUMI",    group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ozaki_takumi.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/ozakitakumi.jpg",     profile:"https://ini-official.com/feature/profile_ozaki-takumi" },
+  { name:"西洸人",       nameEn:"HIROTO",    group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/nishi_hiroto.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/nishihiroto.jpg",     profile:"https://ini-official.com/feature/profile_nishi-hiroto" },
+  { name:"松田迅",       nameEn:"JIN",       group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/matsuda_jin.jpg",       photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/matsudajin.jpg",      profile:"https://ini-official.com/feature/profile_matsuda-jin" },
+  { name:"許豊凡",       nameEn:"FENFAN",    group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/xu_fengfan.jpg",        photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/xufengfan.jpg",       profile:"https://ini-official.com/feature/profile_xu-fengfan" },
+  { name:"池﨑理人",     nameEn:"RIHITO",    group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/ikezaki_rihito.jpg",    photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/ikezakirihito.jpg",   profile:"https://ini-official.com/feature/profile_ikezaki-rihito" },
+  { name:"佐野雄大",     nameEn:"YUDAI",     group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/sano_yudai.jpg",        photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/sanoyudai.jpg",       profile:"https://ini-official.com/feature/profile_sano-yudai" },
+  { name:"後藤威尊",     nameEn:"TAKERU",    group:"INI",     photo:"https://dbsdcjn.github.io/lapone-lanking/image/goto_takeru.jpg",       photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/gototakeru.jpg",      profile:"https://ini-official.com/feature/profile_goto-takeru" },
+  { name:"大久保波留",   nameEn:"NALU",      group:"DXTEEN",  photo:"https://dbsdcjn.github.io/lapone-lanking/image/Wanna_nalu_a.jpg",     photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/okubonalu.jpg",       profile:"https://dxteen.com/feature/profile_okubo_nalu" },
+  { name:"田中笑太郎",   nameEn:"SHOTARO",   group:"DXTEEN",  photo:"https://dbsdcjn.github.io/lapone-lanking/image/Wanna_shotaro_a.jpg",  photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/tanakashotaro.jpg",   profile:"https://dxteen.com/feature/profile_tanaka_shotaro" },
+  { name:"谷口太一",     nameEn:"TAICHI",    group:"DXTEEN",  photo:"https://dbsdcjn.github.io/lapone-lanking/image/Wanna_taichi_a.jpg",   photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/taniguchitaichi.jpg", profile:"https://dxteen.com/feature/profile_taniguchi_taichi" },
+  { name:"寺尾香信",     nameEn:"KOSHIN",    group:"DXTEEN",  photo:"https://dbsdcjn.github.io/lapone-lanking/image/Wanna_koshin_a.jpg",   photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/teraokoshin.jpg",     profile:"https://dxteen.com/feature/profile_terao_koshin" },
+  { name:"平本健",       nameEn:"KEN",       group:"DXTEEN",  photo:"https://dbsdcjn.github.io/lapone-lanking/image/Wanna_ken_a.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/hiramotoken.jpg",     profile:"https://dxteen.com/feature/profile_hiramoto_ken" },
+  { name:"福田歩汰",     nameEn:"AYUTA",     group:"DXTEEN",  photo:"https://dbsdcjn.github.io/lapone-lanking/image/Wanna_ayuta_a.jpg",    photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/fukudaayuta.jpg",     profile:"https://dxteen.com/feature/profile_fukuda_ayuta" },
+  { name:"加藤大樹",     nameEn:"DAIKI",     group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ DAIKI_02.jpg",     photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ DAIKI_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/daiki" },
+  { name:"矢田佳暉",     nameEn:"YOSHIKI",   group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ YOSHIKI_02.jpg",   photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ YOSHIKI_02.jpg",   profile:"https://shinsekai.produce101.jp/feature/yoshiki" },
+  { name:"パク・シヨン", nameEn:"SIYOUNG",   group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ SIYOUNG_02.jpg",   photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ SIYOUNG_02.jpg",   profile:"https://shinsekai.produce101.jp/feature/siyoung" },
+  { name:"オ・シンヘン", nameEn:"SHINHAENG", group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ SHINHAENG_02.jpg", photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ SHINHAENG_02.jpg", profile:"https://shinsekai.produce101.jp/feature/shinhaeng" },
+  { name:"後藤結",       nameEn:"YUKI",      group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ YUKI_02.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ YUKI_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/yuki" },
+  { name:"柳谷伊冴",     nameEn:"ISSA",      group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ ISSA_02.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ ISSA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/issa" },
+  { name:"小野慶人",     nameEn:"KEITO",     group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ KEITO_02.jpg",     photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ KEITO_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/keito" },
+  { name:"安部結蘭",     nameEn:"YURA",      group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ YURA_02.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ YURA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/yura" },
+  { name:"飯塚亮賀",     nameEn:"RYOGA",     group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ RYOGA_02.jpg",     photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ RYOGA_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/ryoga" },
+  { name:"杉山竜司",     nameEn:"RYUJI",     group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ RYUJI_02.jpg",     photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ RYUJI_02.jpg",     profile:"https://shinsekai.produce101.jp/feature/ryuji" },
+  { name:"照井康祐",     nameEn:"KOSUKE",    group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ KOSUKE_02.jpg",    photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ KOSUKE_02.jpg",    profile:"https://shinsekai.produce101.jp/feature/kosuke" },
+  { name:"濱田永遠",     nameEn:"TOWA",      group:"KO1KEYZ", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ TOWA_02.jpg",      photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KO1KEYZ TOWA_02.jpg",      profile:"https://shinsekai.produce101.jp/feature/towa" },
+  { name:"ソン・ハンビン", nameEn:"HANBIN",  group:"ZB1", photo:"https://dbsdcjn.github.io/lapone-lanking/image/SUNGHANBIN.jpg",  photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/SUNGHANBIN.jpg",  profile:"https://zerobaseone.jp/feature/profile_sung_han_bin" },
+  { name:"キム・ジウン",   nameEn:"JIWOONG", group:"ZB1", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KIMJIWOONG.jpg",  photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KIMJIWOONG.jpg",  profile:"https://zerobaseone.jp/feature/profile_kim_ji_woong" },
+  { name:"キム・テレ",     nameEn:"TAERAE",  group:"ZB1", photo:"https://dbsdcjn.github.io/lapone-lanking/image/KIMTAERAE.jpg",   photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/KIMTAERAE.jpg",   profile:"https://zerobaseone.jp/feature/profile_kim_tae_rae" },
+  { name:"パク・ゴヌク",   nameEn:"GUNWOOK", group:"ZB1", photo:"https://dbsdcjn.github.io/lapone-lanking/image/PARKGUNWOOK.jpg", photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/PARKGUNWOOK.jpg", profile:"https://zerobaseone.jp/feature/profile_park_gun_wook" },
+  { name:"ソク・マシュー", nameEn:"MATTHEW", group:"ZB1", photo:"https://dbsdcjn.github.io/lapone-lanking/image/SEOKMATTHEW.jpg", photoBeginner:"https://dbsdcjn.github.io/lapone-lanking/image/SEOKMATTHEW.jpg", profile:"https://zerobaseone.jp/feature/profile_seok_matthew" },
+];
+
+let idols = [];
+let wins = {};
+let appearances = {};
+let beats = {}; // 直接対決の勝敗記録（"勝者-敗者" をキーにする）
+let comparisons = [];
+let currentIdx = 0;
+let totalComparisons = 0;
+let selectedGroups = new Set();
+let compareMode = "quick";
+let photoMode = "official";
+let excluded = new Set();
+
+function idolPhoto(idol) {
+  return photoMode === "beginner" ? (idol.photoBeginner || idol.photo) : idol.photo;
+}
+
+// KO1KEYZ・ZB1は初心者向けでも公式写真のままなので、顔が上部にある前提で上寄りクロップする
+const SAME_PHOTO_GROUPS = new Set(["KO1KEYZ", "ZB1"]);
+function idolCropPosition(idol) {
+  const useCenter = photoMode === "beginner" && !SAME_PHOTO_GROUPS.has(idol.group);
+  return useCenter ? "center 50%" : "center 20%";
+}
+let history = [];
+let pendingAdvanceTimer = null;
+let lastRanked = [];
+let lastMoreRanked = [];
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function buildComparisons(list, mode) {
+  if (mode === "full") {
+    const pairs = [];
+    for (let i = 0; i < list.length; i++) {
+      for (let j = i + 1; j < list.length; j++) {
+        pairs.push([i, j]);
+      }
+    }
+    return shuffle(pairs);
+  }
+  // お手軽モード：円順表方式で全員の出場回数を揃える（1人あたり約5戦）
+  // 出場回数が不均等だと「1戦1勝=勝率100%」が過大評価されて順位が歪むため
+  return buildBalancedComparisons(list.length, 5);
+}
+
+// 総当たり日程の円順表方式。roundCountラウンド分だけ切り出すことで、
+// 全員がほぼ同じ回数だけ出場する対戦リストを作る
+function buildBalancedComparisons(n, roundCount) {
+  const ids = shuffle([...Array(n).keys()]);
+  if (n % 2 === 1) ids.push(-1); // 奇数人数なら休み枠を追加
+  const m = ids.length;
+  const result = [];
+  for (let r = 0; r < Math.min(roundCount, m - 1); r++) {
+    const pairs = [];
+    for (let i = 0; i < m / 2; i++) {
+      const a = ids[i], b = ids[m - 1 - i];
+      if (a !== -1 && b !== -1) pairs.push(a < b ? [a, b] : [b, a]);
+    }
+    result.push(...shuffle(pairs));
+    ids.splice(1, 0, ids.pop()); // 先頭を固定して回転
+  }
+  return result;
+}
+
+function rate(i) {
+  const a = appearances[i] || 0;
+  return a === 0 ? 0 : (wins[i] || 0) / a;
+}
+
+// 勝率優先、同率なら直接対決の勝敗、次に勝ち数、それも同じなら対戦数が多い方を上位にする
+// ※直接対決を勝率より優先すると比較関数が非推移的になりソートが壊れるため、同率時のみ参照する
+function compareIdols(a, b) {
+  const byRate = rate(b) - rate(a);
+  if (byRate !== 0) return byRate;
+  if (beats[`${a}-${b}`]) return -1;
+  if (beats[`${b}-${a}`]) return 1;
+  const byWins = wins[b] - wins[a];
+  if (byWins !== 0) return byWins;
+  return appearances[b] - appearances[a];
+}
+
+function initGame() {
+  idols = ALL_IDOLS.filter(x => selectedGroups.has(x.group));
+
+  wins = {};
+  appearances = {};
+  beats = {};
+  idols.forEach((_, i) => { wins[i] = 0; appearances[i] = 0; });
+  comparisons = buildComparisons(idols, compareMode);
+  currentIdx = 0;
+  totalComparisons = comparisons.length;
+  history = [];
+  excluded = new Set();
+  updateUndoButtons();
+
+  document.getElementById("resultScreen").classList.remove("active");
+  document.getElementById("battleScreen").classList.remove("hidden");
+  showNext();
+}
+
+function showNext() {
+  if (currentIdx >= comparisons.length) {
+    tryConclude();
+    return;
+  }
+  const [a, b] = comparisons[currentIdx];
+  const idolA = idols[a], idolB = idols[b];
+
+  setCard("A", idolA);
+  setCard("B", idolB);
+
+  document.getElementById("cardA").className = "idol-card";
+  document.getElementById("cardB").className = "idol-card";
+
+  const pct = Math.round((currentIdx / totalComparisons) * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent = `対決 ${currentIdx + 1} / ${totalComparisons}`;
+
+  const stages = ["対決スタート", "熱戦中！", "佳境に入ってきた！", "もうすぐ結果！"];
+  document.getElementById("stageLabel").textContent = stages[Math.min(Math.floor(pct / 25), 3)];
+}
+
+function setCard(side, idol) {
+  const photoEl = document.getElementById("photo" + side);
+  photoEl.src = idolPhoto(idol);
+  photoEl.style.objectPosition = idolCropPosition(idol);
+  document.getElementById("groupTag" + side).textContent = idol.group;
+  document.getElementById("name" + side).textContent = idol.name;
+}
+
+function choose(side, event) {
+  if (pendingAdvanceTimer) return; // 演出中の連打で次のペアに誤投票されるのを防ぐ
+  const [a, b] = comparisons[currentIdx];
+  const winner = side === 0 ? a : b;
+  const loser = side === 0 ? b : a;
+  wins[winner]++;
+  appearances[winner]++;
+  appearances[loser]++;
+  beats[`${winner}-${loser}`] = true;
+  history.push({ idx: currentIdx, winner, loser });
+  currentIdx++;
+  updateUndoButtons();
+
+  document.getElementById(side === 0 ? "cardA" : "cardB").className = "idol-card chosen";
+  document.getElementById(side === 0 ? "cardB" : "cardA").className = "idol-card unchosen";
+
+  spawnHeart(event);
+  pendingAdvanceTimer = setTimeout(() => { pendingAdvanceTimer = null; advance(); }, 380);
+}
+
+function skip() {
+  if (pendingAdvanceTimer) return; // 演出中の連打防止
+  history.push({ idx: currentIdx, winner: null });
+  currentIdx++;
+  updateUndoButtons();
+  advance();
+}
+
+// 「わからない」は対象の2人を選考対象から除外し、以後の対決にも出さない
+function excludeAndSkip() {
+  if (pendingAdvanceTimer) return; // 演出中の連打防止
+  const [a, b] = comparisons[currentIdx];
+  excluded.add(a);
+  excluded.add(b);
+
+  const rest = comparisons.slice(currentIdx);
+  const removedPairs = rest.filter(([x, y]) => x === a || x === b || y === a || y === b);
+  const keptPairs = rest.filter(([x, y]) => x !== a && x !== b && y !== a && y !== b);
+  comparisons = comparisons.slice(0, currentIdx).concat(keptPairs);
+  totalComparisons = comparisons.length;
+
+  history.push({ idx: currentIdx, winner: null, excludedPair: [a, b], removedPairs });
+  updateUndoButtons();
+  advance();
+}
+
+function advance() {
+  const boundary = compareMode === "full" ? 20 : 9;
+  if (currentIdx < comparisons.length && isTopNLocked(boundary)) {
+    finalizeResult();
+    return;
+  }
+  showNext();
+}
+
+// 通常の対決リストを使い切った時点で9位の境界が同点の場合、安易に確定させず追加対決を挟む
+function tryConclude() {
+  const totalAppearances = idols.reduce((sum, _, i) => sum + (appearances[i] || 0), 0);
+  if (totalAppearances === 0) {
+    showTieResult();
+    return;
+  }
+
+  const ambiguous = findAmbiguousTie();
+  if (ambiguous) {
+    if (ambiguous.unaskedPairs.length > 0) {
+      comparisons = comparisons.concat(ambiguous.unaskedPairs);
+      totalComparisons = comparisons.length;
+      showNext();
+      return;
+    }
+    // 同点メンバー同士の対決をやり尽くしてもなお決着がつかない場合は、
+    // 決着がついたところまでを結果として出す（1人も決まっていなければ特別演出）
+    if (ambiguous.countAbove === 0) {
+      showTieResult();
+      return;
+    }
+    const ranked = activeIndices().sort(compareIdols);
+    const decidedIdx = ranked.slice(0, ambiguous.countAbove);
+    finalizeResult(decidedIdx, ambiguous.tied);
+    return;
+  }
+
+  finalizeResult();
+}
+
+function activeIndices() {
+  return idols.map((_, i) => i).filter(i => !excluded.has(i));
+}
+
+// 確定前に上位3人同士が直接対決済みかを確認し、足りなければ対決を割り込ませる
+function ensureTopConfirmed(topCount) {
+  const ranked = activeIndices().sort(compareIdols);
+  if (ranked.length < topCount) return false;
+  const top = ranked.slice(0, topCount);
+
+  const pairKey = ([a, b]) => a < b ? `${a}-${b}` : `${b}-${a}`;
+  const askedKeys = new Set(comparisons.slice(0, currentIdx).map(pairKey));
+
+  // 未実施の上位ペアを洗い出す
+  const missingKeys = new Set();
+  const missingPairs = [];
+  for (let x = 0; x < top.length; x++) {
+    for (let y = x + 1; y < top.length; y++) {
+      const key = pairKey([top[x], top[y]]);
+      if (!askedKeys.has(key)) {
+        missingKeys.add(key);
+        missingPairs.push([top[x], top[y]]);
+      }
+    }
+  }
+  if (missingPairs.length === 0) return false;
+
+  // 早期終了時にキュー後方へ残っている同じペアは取り除き、二重出題を防いだ上で先頭に割り込ませる
+  const pending = comparisons.slice(currentIdx).filter(p => !missingKeys.has(pairKey(p)));
+  shuffle(missingPairs);
+  comparisons = comparisons.slice(0, currentIdx).concat(missingPairs, pending);
+  totalComparisons = comparisons.length;
+  return true;
+}
+
+function finalizeResult(decidedIdx, tiedIdx) {
+  if (ensureTopConfirmed(3)) {
+    showNext();
+    return;
+  }
+  showResult(decidedIdx, tiedIdx);
+}
+
+// 9位とその次点が同率で、9位までの顔ぶれを一意に決められないかどうかを調べる
+function findAmbiguousTie() {
+  const ranked = activeIndices().sort(compareIdols);
+  if (ranked.length <= 9) return null; // 9人以下なら全員表示されるため境界の同点判定は不要
+  const boundaryRate = rate(ranked[8]);
+  const countAbove = ranked.filter(i => rate(i) > boundaryRate).length;
+  const tied = ranked.filter(i => rate(i) === boundaryRate);
+  const slotsNeeded = 9 - countAbove;
+
+  if (tied.length <= slotsNeeded) return null;
+
+  const askedKeys = new Set(comparisons.map(([a, b]) => a < b ? `${a}-${b}` : `${b}-${a}`));
+  const unaskedPairs = [];
+  for (let x = 0; x < tied.length; x++) {
+    for (let y = x + 1; y < tied.length; y++) {
+      const a = tied[x], b = tied[y];
+      const key = a < b ? `${a}-${b}` : `${b}-${a}`;
+      if (!askedKeys.has(key)) unaskedPairs.push([a, b]);
+    }
+  }
+  shuffle(unaskedPairs);
+  return { tied, unaskedPairs, countAbove };
+}
+
+function undo() {
+  if (history.length === 0) return;
+  if (pendingAdvanceTimer) {
+    clearTimeout(pendingAdvanceTimer);
+    pendingAdvanceTimer = null;
+  }
+  const last = history.pop();
+  if (last.winner !== null) {
+    wins[last.winner]--;
+    appearances[last.winner]--;
+    appearances[last.loser]--;
+    delete beats[`${last.winner}-${last.loser}`];
+  }
+  if (last.excludedPair) {
+    excluded.delete(last.excludedPair[0]);
+    excluded.delete(last.excludedPair[1]);
+    comparisons = comparisons.slice(0, last.idx).concat(last.removedPairs).concat(comparisons.slice(last.idx));
+    totalComparisons = comparisons.length;
+  }
+  currentIdx = last.idx;
+  updateUndoButtons();
+
+  document.getElementById("pageHeader").classList.remove("hidden");
+  document.getElementById("resultScreen").classList.remove("active");
+  document.getElementById("tieScreen").classList.remove("active");
+  document.getElementById("battleScreen").classList.remove("hidden");
+  showNext();
+}
+
+function updateUndoButtons() {
+  const disabled = history.length === 0;
+  document.getElementById("undoBtn").disabled = disabled;
+  document.getElementById("undoBtnResult").disabled = disabled;
+  document.getElementById("undoBtnTie").disabled = disabled;
+}
+
+// 上位boundary人がもう確定し、残りの対決を見ても結果が変わらない場合に早期終了する
+// 簡単モードは9位、ガチ全部比較モードは20位が固まった時点で終了してよい
+function isTopNLocked(boundary) {
+  const active = activeIndices();
+  if (active.length <= boundary) return false;
+
+  const remainingCount = {};
+  active.forEach(i => { remainingCount[i] = 0; });
+  comparisons.slice(currentIdx).forEach(([a, b]) => {
+    remainingCount[a]++;
+    remainingCount[b]++;
+  });
+
+  // 残り全部に勝った場合の最良勝率／全部負けた場合の最悪勝率
+  const bestRate = i => {
+    const a = appearances[i] + remainingCount[i];
+    return a === 0 ? 0 : (wins[i] + remainingCount[i]) / a;
+  };
+  const worstRate = i => {
+    const a = appearances[i] + remainingCount[i];
+    return a === 0 ? 0 : wins[i] / a;
+  };
+
+  const ranked = active.slice().sort(compareIdols);
+  const topN = ranked.slice(0, boundary);
+  const rest = ranked.slice(boundary);
+
+  const minTopNWorstRate = Math.min(...topN.map(worstRate));
+  const maxRestBestRate = Math.max(...rest.map(bestRate));
+
+  return maxRestBestRate < minTopNWorstRate;
+}
+
+function spawnHeart(e) {
+  const h = document.createElement("div");
+  h.className = "heart-burst";
+  h.textContent = "♡";
+  const x = e && e.clientX ? e.clientX : window.innerWidth / 2;
+  const y = e && e.clientY ? e.clientY : window.innerHeight / 2;
+  h.style.left = x + "px";
+  h.style.top  = y + "px";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 800);
+}
+
+function showResult(decidedIdx, tiedIdx) {
+  const totalAppearances = idols.reduce((sum, _, i) => sum + (appearances[i] || 0), 0);
+  if (totalAppearances === 0) {
+    showTieResult();
+    return;
+  }
+
+  document.getElementById("pageHeader").classList.add("hidden");
+  document.getElementById("battleScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.add("active");
+
+  const idx = decidedIdx || activeIndices().sort(compareIdols).slice(0, 9);
+  const ranked = idx.map(i => ({ ...idols[i], wins: wins[i], appearances: appearances[i] }));
+  lastRanked = ranked;
+
+  const count = ranked.length;
+  document.getElementById("resultTitle").textContent = `あなたの結婚したい人${count}選 ✦`;
+  document.getElementById("resultSubtitle").textContent = count === 9
+    ? "対決を勝ち抜いたメンバーたちです"
+    : `同率で決着がつかなかったため、決まった${count}名だけの結果です`;
+
+  const tieNote = document.getElementById("tieNote");
+  if (count < 9 && tiedIdx && tiedIdx.length > 0) {
+    const tiedNames = tiedIdx.map(i => `${idols[i].name}（${idols[i].group}）`).join("・");
+    tieNote.textContent = `${count + 1}位で同率だったのは：${tiedNames}`;
+    tieNote.classList.remove("hidden");
+  } else {
+    tieNote.textContent = "";
+    tieNote.classList.add("hidden");
+  }
+
+  const grid = document.getElementById("nineGrid");
+  grid.innerHTML = "";
+  ranked.forEach((idol, i) => {
+    const rank = i + 1;
+    const cell = document.createElement("div");
+    cell.className = "nine-cell" + (i === 0 ? " rank-1" : "");
+    cell.innerHTML = `
+      <div class="nine-emoji"><img src="${idolPhoto(idol)}" alt="" style="object-position:${idolCropPosition(idol)}"></div>
+      <div class="nine-rank-badge">No.${rank}</div>
+      <div class="nine-caption">
+        <div class="nine-name">${idol.name}</div>
+        <div class="nine-group">${idol.group}</div>
+      </div>
+      <button class="nine-profile-btn" type="button" aria-label="プロフィールを見る">↗</button>
+    `;
+    cell.querySelector(".nine-profile-btn").addEventListener("click", () => {
+      window.open(idol.profile, "_blank", "noopener,noreferrer");
+    });
+    grid.appendChild(cell);
+  });
+
+  // ガチ全部比較モードは全員が総当たりで比較されているため、9位より下も信頼できる順位として「もっと見る」で出せる
+  const moreBtn = document.getElementById("moreBtn");
+  const moreList = document.getElementById("moreList");
+  moreList.innerHTML = "";
+  moreList.classList.add("hidden");
+  if (compareMode === "full" && activeIndices().length > ranked.length) {
+    const shownIds = new Set(idx);
+    const restIdx = activeIndices().filter(i => !shownIds.has(i)).sort(compareIdols);
+    lastMoreRanked = restIdx.map(i => ({ ...idols[i], wins: wins[i], appearances: appearances[i] }));
+    moreBtn.textContent = `もっと見る（残り${lastMoreRanked.length}人）`;
+    moreBtn.classList.remove("hidden");
+  } else {
+    lastMoreRanked = [];
+    moreBtn.classList.add("hidden");
+  }
+
+  document.getElementById("progressFill").style.width = "100%";
+  document.getElementById("progressLabel").textContent = "診断完了！";
+  document.getElementById("stageLabel").textContent = "結果発表";
+  renderYoutubePicks("youtubePicks");
+}
+
+function toggleMore() {
+  const moreBtn = document.getElementById("moreBtn");
+  const moreList = document.getElementById("moreList");
+  const isHidden = moreList.classList.contains("hidden");
+
+  if (!isHidden) {
+    moreList.classList.add("hidden");
+    moreBtn.textContent = `もっと見る（残り${lastMoreRanked.length}人）`;
+    return;
+  }
+
+  const offset = lastRanked.length;
+  moreList.innerHTML = "";
+  lastMoreRanked.forEach((idol, i) => {
+    const rank = offset + i + 1;
+    const item = document.createElement("div");
+    item.className = "more-item";
+    item.innerHTML = `
+      <div class="more-thumb"><img src="${idolPhoto(idol)}" alt="" style="object-position:${idolCropPosition(idol)}"></div>
+      <div class="more-info">
+        <div class="more-rank">No.${rank}</div>
+        <div class="more-name">${idol.name}</div>
+        <div class="more-group">${idol.group}</div>
+      </div>
+      <button class="more-profile-btn" type="button" aria-label="プロフィールを見る">↗</button>
+    `;
+    item.querySelector(".more-profile-btn").addEventListener("click", () => {
+      window.open(idol.profile, "_blank", "noopener,noreferrer");
+    });
+    moreList.appendChild(item);
+  });
+  moreList.classList.remove("hidden");
+  moreBtn.textContent = "閉じる ↑";
+}
+
+function showTieResult() {
+  document.getElementById("pageHeader").classList.add("hidden");
+  document.getElementById("battleScreen").classList.add("hidden");
+  document.getElementById("tieScreen").classList.add("active");
+  document.getElementById("progressFill").style.width = "100%";
+  document.getElementById("progressLabel").textContent = "診断完了！";
+  document.getElementById("stageLabel").textContent = "結果発表";
+  renderYoutubePicks("youtubePicksTie");
+}
+
+// あくまで個人のおすすめ。KO1KEYZはまだ企画コンテンツがないため対象外
+const YOUTUBE_PICKS = {
+  JO1: {
+    variety: { title: "購買ダッシュ", url: "https://youtu.be/2iCyScCdTuU?si=hVQjzIo1uW3655zW" },
+    performance: { title: "パフォーマンス", url: "https://youtu.be/Mx9QP_W261Q?si=NTJj-HCR_t6f0MQv" },
+    comment: "ドーム公演も控えているので是非！ラポネの長男、圧巻のパフォーマンスをとくとご覧あれ。"
+  },
+  INI: {
+    variety: { title: "学力テスト", url: "https://youtu.be/Z2yBVTYolOc?si=p-r3YYBUucQqiAHp" },
+    performance: { title: "パフォーマンス", url: "https://youtu.be/LE6TpU3aJh8?si=PHPyUDf7DKAzA5KV" },
+    comment: "なんてったって歌詞がいい！INIの雰囲気がよく伝わる、カッコよくも可愛くもある、メンバーがファンを思って作ってくれた曲。"
+  },
+  DXTEEN: {
+    variety: { title: "バレンタイン", url: "https://youtu.be/9-tiBmjUWB4?si=xcPNDqijxuJFW4iw" },
+    performance: { title: "パフォーマンス", url: "https://youtu.be/LyGqQWJo7FM?si=59yyzz6OtglIYoRH" },
+    comment: "ラポネ唯一(？)のバズりソングと言われている神曲！ダンスプラクティスの揃い方もすごいのでぜひ見てほしい。"
+  }
+};
+
+// youtu.be / youtube.com のURLから動画IDを取り出す
+function youtubeId(url) {
+  const m = url.match(/(?:youtu\.be\/|[?&]v=)([\w-]{11})/);
+  return m ? m[1] : "";
+}
+
+function renderYoutubePicks(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const groups = [...selectedGroups].filter(g => YOUTUBE_PICKS[g]);
+  if (groups.length === 0) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const videoEmbed = (video) => {
+    const id = youtubeId(video.url);
+    return `
+      <div class="youtube-picks-video">
+        <div class="youtube-picks-video-title">${video.title}</div>
+        <div class="youtube-picks-embed">
+          <iframe src="https://www.youtube.com/embed/${id}" title="${video.title}"
+            loading="lazy" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+    `;
+  };
+
+  container.innerHTML = `
+    <div class="youtube-picks-title">
+      ラポネをもっと知りたい人へ
+      <span class="youtube-picks-note">(あくまで私のおすすめです！)</span>
+    </div>
+    ${groups.map(g => {
+      const p = YOUTUBE_PICKS[g];
+      return `
+        <div class="youtube-picks-group">
+          <div class="youtube-picks-group-title">${g}が気になった人へ</div>
+          <div class="youtube-picks-videos">
+            ${videoEmbed(p.variety)}
+            ${videoEmbed(p.performance)}
+          </div>
+          <p class="youtube-picks-comment">${p.comment}</p>
+        </div>
+      `;
+    }).join("")}
+  `;
+}
+
+function restart() {
+  document.getElementById("pageHeader").classList.remove("hidden");
+  document.getElementById("resultScreen").classList.remove("active");
+  document.getElementById("tieScreen").classList.remove("active");
+  document.getElementById("battleScreen").classList.add("hidden");
+  document.getElementById("selectScreen").classList.remove("hidden");
+}
+
+const SHARE_URL = "https://dbsdcjn.github.io/lapone-lanking/";
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function drawCover(ctx, img, dx, dy, dw, dh, verticalBias) {
+  const destRatio = dw / dh;
+  const srcRatio = img.width / img.height;
+  let sx, sy, sw, sh;
+  if (srcRatio > destRatio) {
+    sh = img.height;
+    sw = sh * destRatio;
+    sx = (img.width - sw) / 2;
+    sy = 0;
+  } else {
+    sw = img.width;
+    sh = sw / destRatio;
+    sx = 0;
+    // 公式写真は顔が上部3分の1あたりにあるため上寄りにクロップし、
+    // 初心者版(独自セレクト写真)は顔が中央にあるため中央のままクロップする
+    sy = (img.height - sh) * (verticalBias ?? 0.15);
+  }
+  ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+}
+
+// 正方形を3x3に分割し、中央のマスに1位を配置した画像を作る
+async function buildShareImage(ranked) {
+  const size = 900;
+  const cell = size / 3;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+
+  const images = await Promise.all(ranked.map(idol => loadImage(idolPhoto(idol))));
+
+  const centerCell = 4;
+  const outerCells = [0, 1, 2, 3, 5, 6, 7, 8];
+  const cellToImage = { [centerCell]: images[0] || null };
+  const cellToIdol = { [centerCell]: ranked[0] || null };
+  outerCells.forEach((cellIdx, i) => {
+    cellToImage[cellIdx] = images[i + 1] || null;
+    cellToIdol[cellIdx] = ranked[i + 1] || null;
+  });
+
+  for (let cellIdx = 0; cellIdx < 9; cellIdx++) {
+    const col = cellIdx % 3, row = Math.floor(cellIdx / 3);
+    const x = col * cell, y = row * cell;
+    const img = cellToImage[cellIdx];
+    if (img) {
+      // KO1KEYZは初心者版でも公式写真のままなので、顔が上部にある前提で上寄りクロップする
+      const idolAtCell = cellToIdol[cellIdx];
+      const useTopCrop = photoMode !== "beginner" || (idolAtCell && SAME_PHOTO_GROUPS.has(idolAtCell.group));
+      drawCover(ctx, img, x, y, cell, cell, useTopCrop ? 0.15 : 0.5);
+    } else {
+      // 9位まで決まらなかった枠は白抜きにする
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(x, y, cell, cell);
+      ctx.strokeStyle = "#e5e5e5";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 1, y + 1, cell - 2, cell - 2);
+    }
+    if (cellIdx === centerCell) {
+      ctx.strokeStyle = "#FF9700";
+      ctx.lineWidth = 8;
+      ctx.strokeRect(x + 4, y + 4, cell - 8, cell - 8);
+    }
+  }
+
+  return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+}
+
+async function saveImage() {
+  if (!lastRanked.length) return;
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+  const originalLabel = saveBtn.textContent;
+  saveBtn.textContent = "画像を作成中…";
+
+  let blob;
+  try {
+    blob = await buildShareImage(lastRanked);
+  } catch (err) {
+    alert("画像の作成に失敗しました。お手数ですが、時間をおいてもう一度お試しください。");
+    saveBtn.disabled = false;
+    saveBtn.textContent = originalLabel;
+    return;
+  }
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lapone-kekkon9.png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+  saveBtn.disabled = false;
+  saveBtn.textContent = originalLabel;
+}
+
+async function tweetResult() {
+  if (!lastRanked.length) return;
+  const shareBtn = document.getElementById("shareBtn");
+  shareBtn.disabled = true;
+  const originalLabel = shareBtn.textContent;
+  shareBtn.textContent = "画像を作成中…";
+
+  // ファイル共有に対応する端末ではXへのタブは開かず navigator.share に任せる。
+  // それ以外は画像生成(await)を挟むとユーザー操作の直後ではなくなり
+  // ポップアップブロッカーに阻まれるため、クリック直後の同期処理内でタブだけ先に開いておく。
+  const supportsFileShare = !!(navigator.canShare &&
+    navigator.canShare({ files: [new File([""], "check.png", { type: "image/png" })] }));
+  const twitterWindow = supportsFileShare ? null : window.open("", "_blank");
+
+  let blob;
+  try {
+    blob = await buildShareImage(lastRanked);
+  } catch (err) {
+    if (twitterWindow) twitterWindow.close();
+    alert("画像の作成に失敗しました。お手数ですが、時間をおいてもう一度お試しください。");
+    shareBtn.disabled = false;
+    shareBtn.textContent = originalLabel;
+    return;
+  }
+
+  // navigator.share は files 指定時に url フィールドが共有先アプリ側で無視されることがあるため、
+  // リンクは text に直接埋め込んで確実に一緒に共有されるようにする
+  const text = `私が結婚したいNo.1は${lastRanked[0].name}でした！\n${SHARE_URL}\n#LAPONE結婚したい人9選`;
+  const file = new File([blob], "lapone-kekkon9.png", { type: "image/png" });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], text });
+      shareBtn.disabled = false;
+      shareBtn.textContent = originalLabel;
+      return;
+    } catch (err) {
+      if (err && err.name === "AbortError") {
+        shareBtn.disabled = false;
+        shareBtn.textContent = originalLabel;
+        return;
+      }
+    }
+  }
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "lapone-kekkon9.png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+  const tweetParams = new URLSearchParams({ text });
+  const tweetUrl = `https://twitter.com/intent/tweet?${tweetParams.toString()}`;
+  if (twitterWindow) {
+    twitterWindow.location.href = tweetUrl;
+  } else {
+    window.open(tweetUrl, "_blank");
+  }
+  alert("画像をダウンロードしました。Xの投稿画面に保存した画像を添付してください。");
+
+  shareBtn.disabled = false;
+  shareBtn.textContent = originalLabel;
+}
+
+// Group selection (multi-select, requires 2+ groups to start)
+function updateSelectMeta() {
+  const meta = document.getElementById("selectMeta");
+  if (selectedGroups.size < 2) {
+    meta.textContent = "";
+    return;
+  }
+  const n = ALL_IDOLS.filter(x => selectedGroups.has(x.group)).length;
+  const totalPairs = n * (n - 1) / 2;
+  const secPerAnswer = 3;
+
+  let minTotal, maxTotal;
+  if (compareMode === "full") {
+    // 実際は20位が確定した時点で早期終了するため、9位確定(簡単モード)と同じ密度で目安件数を見積もる
+    minTotal = Math.min(totalPairs, Math.ceil(n * 2.5 * 20 / 9));
+    maxTotal = totalPairs;
+  } else {
+    maxTotal = Math.min(totalPairs, Math.ceil(n * 2.5));
+    minTotal = Math.max(1, Math.ceil(maxTotal * 0.6));
+  }
+
+  const minMinutes = Math.max(1, Math.round(minTotal * secPerAnswer / 60));
+  const maxMinutes = Math.max(minMinutes, Math.round(maxTotal * secPerAnswer / 60));
+
+  const time = minMinutes === maxMinutes ? `約${minMinutes}分` : `約${minMinutes}〜${maxMinutes}分`;
+  const battle = minTotal === maxTotal ? `全${maxTotal}対戦` : `${minTotal}〜${maxTotal}対戦`;
+  meta.textContent = `所要時間：${time} ・ ${battle}`;
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const g = this.dataset.group;
+    if (selectedGroups.has(g)) {
+      selectedGroups.delete(g);
+      this.classList.remove("active");
+    } else {
+      selectedGroups.add(g);
+      this.classList.add("active");
+    }
+    document.getElementById("startBtn").disabled = selectedGroups.size < 2;
+    updateSelectMeta();
+  });
+});
+
+// Mode selection (quick / full round-robin)
+document.querySelectorAll("#modeSelect .mode-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll("#modeSelect .mode-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    compareMode = this.dataset.mode;
+    updateSelectMeta();
+  });
+});
+
+// Photo mode selection (official / beginner-friendly curated photos)
+document.querySelectorAll("#photoModeSelect .mode-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    document.querySelectorAll("#photoModeSelect .mode-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    photoMode = this.dataset.photoMode;
+  });
+});
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  if (selectedGroups.size < 2) return;
+  document.getElementById("selectScreen").classList.add("hidden");
+  document.getElementById("battleScreen").classList.remove("hidden");
+  initGame();
+});
+</script>
+</body>
+</html>
