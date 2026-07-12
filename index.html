@@ -757,6 +757,35 @@
       }
       .vs-badge { justify-self: center; }
     }
+
+    /* Cross-site nav */
+    .site-nav {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .site-nav a:hover { border-color: var(--orange); color: var(--orange); }
+    .site-nav a.current {
+      background: var(--orange-pale);
+      border-color: var(--orange);
+      color: var(--orange);
+    }
   </style>
 </head>
 <body>
@@ -767,6 +796,13 @@
     <h1>あなたの好き顔9選</h1>
     <p>直感で選ぶだけ！<br>最後にあなただけのランキングが完成</p>
   </div>
+
+
+  <nav class="site-nav">
+    <a href="./index.html" class="current">好き顔9選</a>
+    <a href="./tsukiaitai/index.html">付き合いたい人9選</a>
+    <a href="./kekkon/index.html">結婚したい人9選</a>
+  </nav>
 
   <div class="select-screen" id="selectScreen">
     <div class="how-to">
