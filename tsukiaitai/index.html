@@ -203,14 +203,33 @@
       margin-bottom: 0.75rem;
     }
     .favorite-wrap {
-      max-height: 360px;
+      position: relative;
+      max-height: min(58vh, 480px);
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 10px;
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.4rem;
       background: var(--surface-1);
+    }
+    .favorite-scroll-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 1.25rem;
+      opacity: 1;
+      transition: opacity 0.2s;
+    }
+    .favorite-scroll-hint.hidden-hint { opacity: 0; visibility: hidden; }
+    .favorite-scroll-hint .arrow { display: inline-block; animation: favScrollBounce 1.4s infinite; }
+    @keyframes favScrollBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(3px); }
     }
     .favorite-group-title {
       font-size: 12px;
@@ -985,6 +1004,7 @@
     <div class="favorite-wrap" id="favoriteWrap">
       <div id="favoriteGrid"></div>
     </div>
+    <p class="favorite-scroll-hint" id="favoriteScrollHint"><span class="arrow">↓</span> スクロールすると他のグループ（ZB1など）も選べます <span class="arrow">↓</span></p>
 
     <p class="select-meta" id="selectMeta"></p>
     <button class="start-btn" id="startBtn">診断スタート</button>
@@ -1165,7 +1185,7 @@ function renderFavoriteGrid() {
       const card = document.createElement("div");
       card.className = "fav-card" + (selectedFavorites.has(i) ? " selected" : "");
       card.dataset.idx = i;
-      const photo = idol.photoBeginner || idol.photo;
+      const photo = idolPhoto(idol);
       card.innerHTML = `
         <div class="fav-thumb"><img src="${photo}" alt=""></div>
         <div class="fav-name">${idol.name}</div>
@@ -1178,6 +1198,25 @@ function renderFavoriteGrid() {
   });
 
   updateFavoriteCount();
+  setupFavoriteScrollHint();
+}
+
+// スクロールで隠れているグループ（例: ZB1）があることに気づいてもらうためのヒント制御
+function setupFavoriteScrollHint() {
+  const wrap = document.getElementById("favoriteWrap");
+  const hint = document.getElementById("favoriteScrollHint");
+  if (!wrap || !hint) return;
+
+  const updateHint = () => {
+    const hasMore = wrap.scrollHeight - wrap.scrollTop - wrap.clientHeight > 4;
+    hint.classList.toggle("hidden-hint", !hasMore);
+  };
+
+  wrap.scrollTop = 0;
+  wrap.onscroll = updateHint;
+  // 画面がまだ非表示(display:none)の場合 clientHeight/scrollHeight が0になるため、
+  // 表示切り替え後のレイアウト確定を待ってから判定する
+  requestAnimationFrame(() => requestAnimationFrame(updateHint));
 }
 
 function updateFavoriteCount() {
