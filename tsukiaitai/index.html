@@ -24,6 +24,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
     button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    .hidden { display: none; }
 
     :root {
       --orange: #FF5C8A;
@@ -184,6 +185,99 @@
       font-weight: 700;
       color: var(--text-secondary);
       margin-bottom: 0.5rem;
+    }
+
+    /* Favorite picker */
+    .favorite-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+      line-height: 1.6;
+    }
+    .favorite-count {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 0.75rem;
+    }
+    .favorite-wrap {
+      max-height: 360px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 1.25rem;
+      background: var(--surface-1);
+    }
+    .favorite-group-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin: 0.5rem 0 0.5rem 2px;
+    }
+    .favorite-group-title:first-child { margin-top: 0; }
+    .favorite-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .fav-card {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--surface-2);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      user-select: none;
+    }
+    .fav-card.selected {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 2px var(--orange);
+    }
+    .fav-thumb {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: var(--surface-1);
+      overflow: hidden;
+    }
+    .fav-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+    .fav-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+      padding: 4px 2px;
+      line-height: 1.3;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .fav-check {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      color: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      opacity: 0;
+      transition: opacity 0.15s, background 0.15s, color 0.15s;
+    }
+    .fav-card.selected .fav-check {
+      opacity: 1;
+      background: var(--orange);
+      color: #fff;
     }
 
     .mode-select {
@@ -828,12 +922,19 @@
       <div class="how-to-step">
         <span class="how-to-num">2</span>
         <div>
+          <div class="how-to-title">好きな人を選ぶ</div>
+          <div class="how-to-desc">気になるメンバーにチェック（任意）</div>
+        </div>
+      </div>
+      <div class="how-to-step">
+        <span class="how-to-num">3</span>
+        <div>
           <div class="how-to-title">直感で選ぶ</div>
           <div class="how-to-desc">2人のうちどちらと付き合いたいか選ぶだけ</div>
         </div>
       </div>
       <div class="how-to-step">
-        <span class="how-to-num">3</span>
+        <span class="how-to-num">4</span>
         <div>
           <div class="how-to-title">結果が完成</div>
           <div class="how-to-desc">あなただけの付き合いたい人ランキングが誕生</div>
@@ -874,8 +975,20 @@
       </button>
     </div>
 
+    <button class="start-btn" id="toFavoriteBtn" disabled>次へ</button>
+  </div>
+
+  <div class="select-screen hidden" id="favoriteScreen">
+    <div class="select-section-label" id="favoriteSectionLabel">好きな人を選ぶ</div>
+    <p class="favorite-hint" id="favoriteHint">✓ 9人以上選ぶとランキングが決めやすくなります（選ばなければ選択したグループ全員が対象になります）</p>
+    <p class="favorite-count" id="favoriteCount"></p>
+    <div class="favorite-wrap" id="favoriteWrap">
+      <div id="favoriteGrid"></div>
+    </div>
+
     <p class="select-meta" id="selectMeta"></p>
-    <button class="start-btn" id="startBtn" disabled>診断スタート</button>
+    <button class="start-btn" id="startBtn">診断スタート</button>
+    <button class="skip-btn" id="backToSelectBtn">← グループ・モードの選択に戻る</button>
   </div>
 
   <div class="battle-screen hidden" id="battleScreen">
@@ -1023,6 +1136,83 @@ let compareMode = "quick";
 let photoMode = "official";
 let excluded = new Set();
 
+// 「好きな人を選ぶ」で選択されたメンバー（ALL_IDOLSのインデックス基準）
+let selectedFavorites = new Set();
+const GROUP_ORDER = ["JO1", "INI", "DXTEEN", "KO1KEYZ", "ZB1"];
+
+// 診断対象になるメンバーの配列を返す。
+// お気に入りが2人以上選ばれていればそれを使い、そうでなければ選択グループ全員を使う
+function getIdolPool() {
+  if (selectedFavorites.size >= 2) {
+    return ALL_IDOLS.filter((x, i) => selectedFavorites.has(i));
+  }
+  return ALL_IDOLS.filter(x => selectedGroups.has(x.group));
+}
+
+function renderFavoriteGrid() {
+  const grid = document.getElementById("favoriteGrid");
+  grid.innerHTML = "";
+  GROUP_ORDER.filter(g => selectedGroups.has(g)).forEach(group => {
+    const title = document.createElement("div");
+    title.className = "favorite-group-title";
+    title.textContent = group;
+    grid.appendChild(title);
+
+    const groupGrid = document.createElement("div");
+    groupGrid.className = "favorite-grid";
+    ALL_IDOLS.forEach((idol, i) => {
+      if (idol.group !== group) return;
+      const card = document.createElement("div");
+      card.className = "fav-card" + (selectedFavorites.has(i) ? " selected" : "");
+      card.dataset.idx = i;
+      const photo = idol.photoBeginner || idol.photo;
+      card.innerHTML = `
+        <div class="fav-thumb"><img src="${photo}" alt=""></div>
+        <div class="fav-name">${idol.name}</div>
+        <div class="fav-check">✓</div>
+      `;
+      card.addEventListener("click", () => toggleFavorite(i));
+      groupGrid.appendChild(card);
+    });
+    grid.appendChild(groupGrid);
+  });
+
+  updateFavoriteCount();
+}
+
+function updateFavoriteCount() {
+  const countEl = document.getElementById("favoriteCount");
+  const n = selectedFavorites.size;
+  if (n === 0) {
+    countEl.textContent = "";
+  } else if (n === 1) {
+    countEl.textContent = "あと1人以上選ぶと絞り込まれます（1人だけでは開始できません）";
+  } else {
+    countEl.textContent = `現在${n}人選択中${n >= 9 ? " ✓" : ""}`;
+  }
+  updateStartBtnLabel();
+}
+
+// スタートボタンに実際に対象になる人数を表示する（9人に満たなくてもその人数で始められる）
+function updateStartBtnLabel() {
+  const startBtn = document.getElementById("startBtn");
+  if (!startBtn) return;
+  const n = getIdolPool().length;
+  startBtn.textContent = `この${n}人で診断スタート`;
+}
+
+function toggleFavorite(i) {
+  if (selectedFavorites.has(i)) {
+    selectedFavorites.delete(i);
+  } else {
+    selectedFavorites.add(i);
+  }
+  const card = document.querySelector(`.fav-card[data-idx="${i}"]`);
+  if (card) card.classList.toggle("selected", selectedFavorites.has(i));
+  updateFavoriteCount();
+  updateSelectMeta();
+}
+
 function idolPhoto(idol) {
   return photoMode === "beginner" ? (idol.photoBeginner || idol.photo) : idol.photo;
 }
@@ -1098,7 +1288,7 @@ function compareIdols(a, b) {
 }
 
 function initGame() {
-  idols = ALL_IDOLS.filter(x => selectedGroups.has(x.group));
+  idols = getIdolPool();
 
   wins = {};
   appearances = {};
@@ -1761,7 +1951,7 @@ function updateSelectMeta() {
     meta.textContent = "";
     return;
   }
-  const n = ALL_IDOLS.filter(x => selectedGroups.has(x.group)).length;
+  const n = getIdolPool().length;
   const totalPairs = n * (n - 1) / 2;
   const secPerAnswer = 3;
 
@@ -1789,12 +1979,15 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
     if (selectedGroups.has(g)) {
       selectedGroups.delete(g);
       this.classList.remove("active");
+      // 選択解除されたグループのメンバーはお気に入りからも外す
+      ALL_IDOLS.forEach((idol, i) => {
+        if (idol.group === g) selectedFavorites.delete(i);
+      });
     } else {
       selectedGroups.add(g);
       this.classList.add("active");
     }
-    document.getElementById("startBtn").disabled = selectedGroups.size < 2;
-    updateSelectMeta();
+    document.getElementById("toFavoriteBtn").disabled = selectedGroups.size < 2;
   });
 });
 
@@ -1817,9 +2010,22 @@ document.querySelectorAll("#photoModeSelect .mode-btn").forEach(btn => {
   });
 });
 
+document.getElementById("toFavoriteBtn").addEventListener("click", () => {
+  if (selectedGroups.size < 2) return;
+  renderFavoriteGrid();
+  updateSelectMeta();
+  document.getElementById("selectScreen").classList.add("hidden");
+  document.getElementById("favoriteScreen").classList.remove("hidden");
+});
+
+document.getElementById("backToSelectBtn").addEventListener("click", () => {
+  document.getElementById("favoriteScreen").classList.add("hidden");
+  document.getElementById("selectScreen").classList.remove("hidden");
+});
+
 document.getElementById("startBtn").addEventListener("click", () => {
   if (selectedGroups.size < 2) return;
-  document.getElementById("selectScreen").classList.add("hidden");
+  document.getElementById("favoriteScreen").classList.add("hidden");
   document.getElementById("battleScreen").classList.remove("hidden");
   document.getElementById("siteNav").classList.add("hidden");
   initGame();
