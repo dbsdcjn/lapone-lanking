@@ -682,11 +682,11 @@
     .nine-caption {
       position: absolute;
       left: 0; right: 0; bottom: 0;
-      padding: 12px 8px 6px;
+      padding: 8px 6px 4px;
       background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
     }
-    .nine-name { font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); line-height: 1.2; }
-    .nine-group { font-size: 10px; color: rgba(255,255,255,0.85); }
+    .nine-name { font-size: 10px; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); line-height: 1.2; }
+    .nine-group { font-size: 8px; color: rgba(255,255,255,0.85); }
     .nine-profile-btn {
       position: absolute;
       top: 5px;
@@ -1156,6 +1156,27 @@ let compareMode = "quick";
 let photoMode = "official";
 let excluded = new Set();
 
+// 診断結果の集計用（Googleスプレッドシート送信）。個人情報は送らず、
+// 日時・サイト種別・1〜9位の名前とグループのみを匿名で送信する
+const RESULT_ENDPOINT = "https://script.google.com/macros/s/AKfycbyUsVrG1A6lBIDTvW72C094dYC0sRqQkHJCztkSO6SsBCEls7LVxaRX6M-b8zZp2f19/exec";
+const SITE_LABEL = "結婚したい人";
+
+function sendResultToSheet(ranked) {
+  try {
+    fetch(RESULT_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        site: SITE_LABEL,
+        ranking: ranked.map(idol => ({ name: idol.name, group: idol.group })),
+      }),
+    }).catch(() => {});
+  } catch (err) {
+    // 送信に失敗してもユーザー体験には影響させない
+  }
+}
+
 // 「好きな人を選ぶ」で選択されたメンバー（ALL_IDOLSのインデックス基準）
 let selectedFavorites = new Set();
 const GROUP_ORDER = ["JO1", "INI", "DXTEEN", "KO1KEYZ", "ZB1"];
@@ -1623,6 +1644,7 @@ function showResult(decidedIdx, tiedIdx) {
   const idx = decidedIdx || activeIndices().sort(compareIdols).slice(0, 9);
   const ranked = idx.map(i => ({ ...idols[i], wins: wins[i], appearances: appearances[i] }));
   lastRanked = ranked;
+  sendResultToSheet(ranked);
 
   const count = ranked.length;
   document.getElementById("resultTitle").textContent = `あなたの結婚したい人${count}選 ✦`;
